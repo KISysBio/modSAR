@@ -1,0 +1,12 @@
+version: "3"
+services:
+
+  modsar:
+    build: processing
+    volumes:
+      - ./processing/modSAR:/mnt/code/modSAR
+      - ./processing/notebooks:/mnt/code
+      - ./data:/mnt/data
+      - ./CPLEX_Studio1263/cplex/bin/x86-64_linux:/opt/cplex
+    ports:
+      - 8888:8888
