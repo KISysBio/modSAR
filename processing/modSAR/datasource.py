@@ -95,7 +95,7 @@ class ChEMBLApiDataSource(DataSource):
         self.bioactivities_df = bioactivities_df
 
     def save_bioactivities(self, xls_filename):
-        self.bioactivities_df.to_excel(xls_file, index=False)
+        self.bioactivities_df.to_excel(xls_filename, index=False)
 
     def __str__(self):
         return self.__repr__()
