@@ -8,6 +8,7 @@ This module supports representation of functional bioactivies
 
 """
 
+import numpy as np
 import pandas as pd
 
 from chembl_webresource_client.new_client import new_client
@@ -51,7 +52,27 @@ def preprocess_activities(bioactivities_df):
     valid_rows = ~bioactivities_df['pchembl_value'].isnull()
     bioactivities_df = bioactivities_df[valid_rows]
 
-    return bioactivities_df
+    def mark_to_remove(data):
+        """Mark data for removal if standard deviation of duplicated entries is above 1"""
+
+        pchembl_value = data['pchembl_value'].astype(float)
+        std_deviation = np.std(pchembl_value)
+        number_compounds = data.shape[0]
+        # It is duplicated
+        result_df = pd.Series(
+            {'number_compounds': number_compounds,
+             'standard_deviation': std_deviation,
+             'median_pchembl_value': np.median(pchembl_value),
+             'duplicated': number_compounds > 1,
+             'mark_to_remove': std_deviation > 1})
+        return result_df
+
+    grouped_dataset = bioactivities_df.groupby(['parent_molecule_chembl_id']).apply(mark_to_remove)
+    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index())
+    merged_df = merged_df[~merged_df['mark_to_remove']]
+    merged_df = merged_df.groupby(['parent_molecule_chembl_id']).head(1)
+
+    return merged_df
 
 
 class ChEMBLApiDataSource(DataSource):
@@ -114,6 +135,12 @@ class ChEMBLApiDataSource(DataSource):
 
     def save_bioactivities(self, xls_filename):
         self.bioactivities_df.to_excel(xls_filename, index=False)
+
+    def get_qsar_dataset(self):
+        """Preprocess and transform bioactivities into a QSARDataset object"""
+        
+        clean_df = preprocess_activities(self.bioactivities_df)
+
 
     def __str__(self):
         return self.__repr__()
