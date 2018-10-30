@@ -28,7 +28,7 @@ class JavaCDKBridge:
 
     """
 
-    def __init__(self, py4j_jar_path, cdk_jar_path):
+    def __init__(self, py4j_jar_path=None, cdk_jar_path=None):
         """Initialise paths"""
 
         if py4j_jar_path is None:
@@ -58,10 +58,11 @@ class JavaCDKBridge:
             else:
                 command_str = "java -cp '{}:{}/' CDKBridge"
                 command_str = command_str.format(self.py4py4j_jar_path, self.cdk_jar_path)
-                subprocess.Popen([command_str], shell=True)
+                subprocess.Popen([command_str], shell=True, stdout=subprocess.PIPE)
                 self.is_server_running = True
                 self.gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
 
     def __del__(self):
         print("Cleaning up JavaGateway")
         self.gateway.shutdown()
+        self.is_server_running = False

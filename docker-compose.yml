@@ -2,7 +2,12 @@ version: "3"
 services:
 
   modsar:
-    build: processing
+    build:
+      context: processing
+      dockerfile: Dockerfile
+      args:
+        - JAR_PATH:/opt
+        - CDK_VERSION:2.2
     volumes:
       - ./processing/modSAR:/mnt/code/modSAR
       - ./processing/notebooks:/mnt/code
