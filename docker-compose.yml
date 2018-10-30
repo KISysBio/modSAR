@@ -8,5 +8,8 @@ services:
       - ./processing/notebooks:/mnt/code
       - ./data:/mnt/data
       - ./CPLEX_Studio1263/cplex/bin/x86-64_linux:/opt/cplex
+    environment:
+      - JAR_PATH=/opt
+      - CDK_VERSION=2.2
     ports:
       - 8888:8888

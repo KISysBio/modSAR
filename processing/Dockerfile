@@ -18,8 +18,10 @@ RUN apt install -y openjdk-8-jdk
 
 USER jovyan
 
-RUN cd ~ && git clone https://github.com/jonjoncardoso/cdk_pywrapper.git
-RUN cd ~/cdk_pywrapper && pip install .
+RUN wget https://github.com/cdk/cdk/releases/download/{0}/{0}.jar
+
+#RUN cd ~ && git clone https://github.com/jonjoncardoso/cdk_pywrapper.git
+#RUN cd ~/cdk_pywrapper && pip install .
 
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user

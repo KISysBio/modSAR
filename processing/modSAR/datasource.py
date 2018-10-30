@@ -138,7 +138,7 @@ class ChEMBLApiDataSource(DataSource):
 
     def get_qsar_dataset(self):
         """Preprocess and transform bioactivities into a QSARDataset object"""
-        
+
         clean_df = preprocess_activities(self.bioactivities_df)
 
 
