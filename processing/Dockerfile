@@ -25,8 +25,5 @@ RUN wget "https://github.com/cdk/cdk/releases/download/cdk-${CDK_VERSION}/cdk-${
 
 USER jovyan
 
-#RUN cd ~ && git clone https://github.com/jonjoncardoso/cdk_pywrapper.git
-#RUN cd ~/cdk_pywrapper && pip install .
-
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
