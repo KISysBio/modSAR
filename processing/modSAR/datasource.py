@@ -141,7 +141,6 @@ class ChEMBLApiDataSource(DataSource):
 
         clean_df = preprocess_activities(self.bioactivities_df)
 
-
     def __str__(self):
         return self.__repr__()
 

@@ -27,3 +27,9 @@ USER jovyan
 
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter nbextension enable execute_time/ExecuteTime
+RUN jupyter nbextension enable codefolding/main
+RUN jupyter nbextension enable codefolding/edit
+RUN jupyter nbextension enable toc2/main
+RUN jupyter nbextension enable collapsible_headings/main
