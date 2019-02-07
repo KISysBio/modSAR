@@ -70,3 +70,47 @@ class JavaCDKBridge:
         print("Cleaning up JavaGateway")
         self.gateway.shutdown()
         self.is_server_running = False
+
+
+class CDKDescriptors:
+
+    #TODO: Test this class, fix problems
+
+    def __init__(self):
+        java_cdk_bridge = JavaCDKBridge()
+        java_cdk_bridge.start_cdk_java_bridge()
+
+        gateway = java_cdk_bridge.gateway
+        cdk = gateway.jvm.org.openscience.cdk
+
+        builder = cdk.DefaultChemObjectBuilder.getInstance()
+        self.smiles_parser = cdk.smiles.SmilesParser(builder)
+
+        self.descriptors_list = self._get_descriptors_list()
+
+    def _get_descriptors_list(self, descriptor_file='modSAR/descriptors_list.csv'):
+        descriptors_list = pd.read_csv(descriptor_file)
+
+        def remove_prefix(java_class_name):
+            return java_class_name.replace('org.openscience.', '') + '()'
+
+        descriptors_list['object_invocation'] = descriptors_list['descriptorClass'].apply(remove_prefix)
+        return descriptors_list
+
+    def calculate(self, data, smiles_column):
+        mol_container = self.smiles_parser.parseSmiles(data[smiles_column])
+        dict_descriptors = {}
+        for i in range(descriptors_df.shape[0]):
+            descriptor = eval(descriptors_df.iloc[i]['object_invocation'])
+            descriptor.initialise(builder)
+            descriptor_names = [desc_name for desc_name in descriptor.getDescriptorNames()]
+            try:
+                descriptor_values = descriptor.calculate(mol_container).getValue().toString().split(',')
+            except Exception as e:
+                print(e)
+
+            dict_descriptors.update({descriptor_names[j]: descriptor_values[j]
+                                     for j in range(len(descriptor_names))})
+
+        result_df = pd.DataFrame(dict_descriptors, index=[data['parent_molecule_chembl_id']])
+        return result_df

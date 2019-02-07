@@ -133,6 +133,10 @@ class ChEMBLApiDataSource(DataSource):
 
         self.bioactivities_df = bioactivities_df
 
+        self.smiles_column = 'canonical_smiles'
+        self.compound_id_column = 'parent_molecule_chembl_id'
+        self.activity_column = 'pchembl_value'
+
     def save_bioactivities(self, xls_filename):
         self.bioactivities_df.to_excel(xls_filename, index=False)
 
@@ -140,6 +144,8 @@ class ChEMBLApiDataSource(DataSource):
         """Preprocess and transform bioactivities into a QSARDataset object"""
 
         clean_df = preprocess_activities(self.bioactivities_df)
+        # qsar_dataset = QSARDataset(target_id=self.target_id,
+        #                            bioactivities_df=clean_df)
 
     def __str__(self):
         return self.__repr__()
