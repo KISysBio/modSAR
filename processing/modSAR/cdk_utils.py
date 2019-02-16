@@ -53,6 +53,8 @@ class JavaCDKBridge:
             if 'CDKBridge' in str(line):
                 print('CDK Bridge process running')
                 self.is_server_running = True
+                if self.gateway is None:
+                    self.gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
             else:
                 print("Compiling CDKBridge")
                 command_str = "javac -cp {}:{}/ /mnt/code/modSAR/java/cdk_bridge.java"
