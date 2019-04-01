@@ -4,6 +4,7 @@ import pandas as pd
 from pyomo.core.base.param import IndexedParam
 from rdkit.DataStructs.cDataStructs import TanimotoSimilarity
 
+
 # Print iterations progress
 def print_progress_bar(iteration, total, prefix='', suffix='',
                        decimals=1, length=100, fill='█'):

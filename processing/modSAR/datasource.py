@@ -13,6 +13,99 @@ import pandas as pd
 
 from chembl_webresource_client.new_client import new_client
 from .utils import print_progress_bar
+from .dataset import QSARDataset
+from .cdk_utils import CDKDescriptors, JavaCDKBridge
+
+
+def build_qsar_dataset(data_source):
+    # TODO: Complex this flow, make sure it works
+
+    def check_valid_data_source(data_source):
+
+        missing_attributes = []
+        if ((data_source.smiles_column is None) or (data_source.smiles_column == '')):
+            missing_attributes.append(['smiles_column'])
+        if (data_source.activity_column is None):
+            missing_attributes.append(['activity_column'])
+        if (data_source.compound_id_column is None):
+            missing_attributes.append(['compound_id_column'])
+
+        if (len(missing_attributes) > 1):
+            raise ValueError('DataSource %s does not have required attributes: %s' %
+                             (data_source, ', '.join(missing_attributes)))
+
+    check_valid_data_source(data_source)
+
+    clean_df = Preprocessing().clean_dataset(data_source)
+    java_cdk_bridge = JavaCDKBridge()
+    java_cdk_bridge.start_cdk_java_bridge()
+    descriptors = CDKDescriptors().calculate(clean_df, data_source.smiles_column)
+    qsar_dataset = QSARDataset(descriptors, activity=clean_df, metadata=clean_df)
+    return qsar_dataset
+
+
+class Preprocessing:
+    """Preprocess data obtained via a DataSource (.csv, .xls file or ChEMBL)
+
+    The bioactivity data is filtered, duplicated and invalid entries are handled and
+      molecular descriptors are calculated.
+    """
+
+    def __init__(self, activity_column='median_activity_value'):
+        self.activity_column = activity_column
+
+    def _mark_to_remove(self, data, activity_column):
+        """Mark data for removal if standard deviation of duplicated entries is above 1"""
+
+        activity_value = data[activity_column].astype(float)
+        std_deviation = np.std(activity_value)
+        number_compounds = data.shape[0]
+
+        # It is duplicated
+        result_df = pd.Series(
+            {'number_compounds': number_compounds,
+             'standard_deviation': std_deviation,
+             self.activity_column: np.median(activity_value),
+             'duplicated': number_compounds > 1,
+             'mark_to_remove': std_deviation > 1})
+        return result_df
+
+    def _default_filter_chembl(self, bioactivities_df):
+        """Default filter for data downloaded from ChEMBL"""
+
+        # Relation measured must be of type equality
+        valid_rows = bioactivities_df['relation'] == '='
+        bioactivities_df = bioactivities_df[valid_rows]
+
+        # Remove data that is marked as potential invalid
+        valid_rows = bioactivities_df['data_validity_comment'].isnull()
+        bioactivities_df = bioactivities_df[valid_rows]
+
+        # There must be a valid pCHEMBL value
+        valid_rows = ~bioactivities_df['pchembl_value'].isnull()
+        bioactivities_df = bioactivities_df[valid_rows]
+        return bioactivities_df
+
+    def clean_dataset(self, data_source):
+
+        bioactivities_df = data_source.bioactivities_df.copy()
+
+        if type(data_source) is ChEMBLApiDataSource:
+            # Perform initial filter on bioactivities
+            bioactivities_df = self._default_filter_chembl(bioactivities_df)
+        else:
+            raise ValueError("Data source not recognized: %s" % type(data_source))
+
+        # Mark duplicated entries for removeal
+        grouped_dataset = bioactivities_df.groupby(data_source.compound_id_column)
+        grouped_dataset = grouped_dataset.apply(lambda x: self._mark_to_remove(x, data_source.activity_column))
+
+        # The resulting dataset, clean_df, does not contain duplicated entries
+        merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index())
+        merged_df = merged_df[~merged_df['mark_to_remove']]
+        clean_df = merged_df.groupby(data_source.compound_id_column).head(1)
+
+        return clean_df
 
 
 class DataSource():
@@ -37,51 +130,13 @@ class DataSource():
         raise NotImplementedError()
 
 
-def preprocess_activities(bioactivities_df):
-    """Pre-process ChEMBL bioactivities DataFrame"""
-
-    # Relation measured must be of type equality
-    valid_rows = bioactivities_df['relation'] == '='
-    bioactivities_df = bioactivities_df[valid_rows]
-
-    # Remove data that is marked as potential invalid
-    valid_rows = bioactivities_df['data_validity_comment'].isnull()
-    bioactivities_df = bioactivities_df[valid_rows]
-
-    # There must be a valid pCHEMBL value
-    valid_rows = ~bioactivities_df['pchembl_value'].isnull()
-    bioactivities_df = bioactivities_df[valid_rows]
-
-    def mark_to_remove(data):
-        """Mark data for removal if standard deviation of duplicated entries is above 1"""
-
-        pchembl_value = data['pchembl_value'].astype(float)
-        std_deviation = np.std(pchembl_value)
-        number_compounds = data.shape[0]
-        # It is duplicated
-        result_df = pd.Series(
-            {'number_compounds': number_compounds,
-             'standard_deviation': std_deviation,
-             'median_pchembl_value': np.median(pchembl_value),
-             'duplicated': number_compounds > 1,
-             'mark_to_remove': std_deviation > 1})
-        return result_df
-
-    grouped_dataset = bioactivities_df.groupby(['parent_molecule_chembl_id']).apply(mark_to_remove)
-    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index())
-    merged_df = merged_df[~merged_df['mark_to_remove']]
-    merged_df = merged_df.groupby(['parent_molecule_chembl_id']).head(1)
-
-    return merged_df
-
-
 class ChEMBLApiDataSource(DataSource):
     """
         Retrieve active compounds for a target using ChEMBL API
 
         Example of use:
 
-            chembl_data_source = ChEMBLApiDataSource(target_id='CHEMBL202', endpoints='IC50')
+            chembl_data_source = ChEMBLApiDataSource(target_id='CHEMBL202', standard_types=['IC50'])
             chembl202_dataset = chembl_data_source.get_qsar_dataset()
     """
 
@@ -116,7 +171,17 @@ class ChEMBLApiDataSource(DataSource):
                                          for std_type in self.standard_types])
 
             if is_valid_std_type:
-                compound_df = pd.DataFrame(compound_dict, index=pd.Series(0))
+                # Drop unused columns
+                compound_dict.pop('activity_properties', None)
+                # Capture Ligand Efficiency
+                lig_efficiency = compound_dict.pop('ligand_efficiency', None)
+
+                compound_df = pd.DataFrame(compound_dict, index=[0])
+                if lig_efficiency is not None:
+                    lig_efficiency_df = pd.DataFrame(lig_efficiency, index=[0])
+                    lig_efficiency_df.columns = ['ligand_efficiency_%s' % col
+                                                 for col in lig_efficiency_df.columns]
+                    compound_df = pd.concat([compound_df, lig_efficiency_df], axis=1)
             else:
                 compound_df = pd.DataFrame(columns=compound_dict.keys())
 
@@ -129,18 +194,20 @@ class ChEMBLApiDataSource(DataSource):
                            prefix='Progress:', suffix='Complete', length=50)
         bioactivities_df = [get_compound_df(idx, compound_dict)
                             for idx, compound_dict in enumerate(result)]
-        bioactivities_df = pd.concat(bioactivities_df)
+        bioactivities_df = pd.concat(bioactivities_df, sort=False).reset_index(drop=True)
 
         self.bioactivities_df = bioactivities_df
+
+        self.smiles_column = 'canonical_smiles'
+        self.compound_id_column = 'parent_molecule_chembl_id'
+        self.activity_column = 'pchembl_value'
 
     def save_bioactivities(self, xls_filename):
         self.bioactivities_df.to_excel(xls_filename, index=False)
 
     def get_qsar_dataset(self):
         """Preprocess and transform bioactivities into a QSARDataset object"""
-        
-        clean_df = preprocess_activities(self.bioactivities_df)
-
+        return build_qsar_dataset(self)
 
     def __str__(self):
         return self.__repr__()
