@@ -1,4 +1,4 @@
-Creator "igraph version 1.2.0 Sun Nov 11 22:10:47 2018"
+Creator "igraph version 1.2.4 Fri Feb 22 12:04:45 2019"
 Version 1
 graph
 [
@@ -15,6 +15,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1ccc(OC)c(Cc2sc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -29,6 +30,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CCSc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -43,6 +45,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(CNCc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)coc2n1"
   ]
   node
@@ -57,6 +60,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2nc(COc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -71,6 +75,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "C\C(=C\c1coc2nc(N)nc(N)c12)\c3cccc4ccccc34"
   ]
   node
@@ -85,6 +90,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "O=C(Nc1ccc2N=C(SC\C=C\c3ccccc3)N(Cc4ccccc4)C(=O)c2c1)\C=C\c5ccccc5"
   ]
   node
@@ -99,6 +105,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CSC1=Nc2ccc(cc2C(=O)N1Cc3ccccc3)N(C\C=C\c4ccccc4)C\C=C\c5ccccc5"
   ]
   node
@@ -113,6 +120,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CSC1=Nc2ccc(cc2C(=O)N1Cc3ccccc3)N(C)CC=C"
   ]
   node
@@ -127,6 +135,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cc1ccc2N=C(SC\C=C\c3ccccc3)N(Cc4ccccc4)C(=O)c2c1"
   ]
   node
@@ -141,6 +150,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "Cc1ccc2N=C(SCC=C)N(Cc3ccccc3)C(=O)c2c1"
   ]
   node
@@ -155,6 +165,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "[O-][N+](=O)c1ccc2N=C(SCC=C)N(Cc3ccccc3)C(=O)c2c1"
   ]
   node
@@ -169,6 +180,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "CSC1=Nc2ccc(cc2C(=O)N1Cc3ccccc3)N(CC=C)CC=C"
   ]
   node
@@ -183,6 +195,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "C=CCNc1ccc2N=C(SCC=C)N(Cc3ccccc3)C(=O)c2c1"
   ]
   node
@@ -197,6 +210,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "C=CCSC1=Nc2ccc(cc2C(=O)N1Cc3ccccc3)N(CC=C)CC=C"
   ]
   node
@@ -211,6 +225,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "C=CC(=O)Nc1ccc2N=C(SC\C=C\c3ccccc3)N(Cc4ccccc4)C(=O)c2c1"
   ]
   node
@@ -225,6 +240,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "Cc1ccc2N(C(O)\C=C\c3ccccc3)C(=S)N(Cc4ccccc4)C(=O)c2c1"
   ]
   node
@@ -239,6 +255,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "Nc1ccc2N=C(SC\C=C\c3ccccc3)N(Cc4ccccc4)C(=O)c2c1"
   ]
   node
@@ -253,6 +270,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "C=CCSC1=Nc2ccc(NC\C=C\c3ccccc3)cc2C(=O)N1Cc4ccccc4"
   ]
   node
@@ -267,6 +285,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "C=CCSC1=Nc2ccc(cc2C(=O)N1Cc3ccccc3)N(C\C=C\c4ccccc4)C\C=C\c5ccccc5"
   ]
   node
@@ -281,6 +300,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1cc(CN(C)c2ccc3nc(N)nc(N)c3c2)cc(OC)c1"
   ]
   node
@@ -295,6 +315,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "CN(Cc1cccc2CCCCc12)c3ccc4nc(N)nc(N)c4c3"
   ]
   node
@@ -309,6 +330,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1cc(OC)c(OC)cc1CNc2ccc3nc(N)nc(N)c3c2"
   ]
   node
@@ -323,6 +345,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2cc(NCc3cccc4CCCCc34)ccc2n1"
   ]
   node
@@ -337,6 +360,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2cc(NCc3ccccc3)ccc2n1"
   ]
   node
@@ -351,6 +375,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(CN(C)c2ccc3nc(N)nc(N)c3c2)c(OC)c1"
   ]
   node
@@ -365,6 +390,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(CN(C#C)c3ccc(cc3)C(=O)NC(CCC(=O)NC(CCC(=O)NC(CCC(=O)O)C(=O)O)C(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -379,6 +405,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(CN(C#C)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -393,6 +420,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(CN(C#C)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)NC(CCC(=O)NC(CCC(=O)NC(CCC(=O)O)C(=O)O)C(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -407,6 +435,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(CN(C#C)c3ccc(cc3)C(=O)NC(CCC=O)C(=O)O)ccc2n1"
   ]
   node
@@ -421,6 +450,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1ccc(NCc2ccc3nc(N)nc(N)c3c2)cc1OC"
   ]
   node
@@ -435,6 +465,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(NCc2ccc3nc(N)nc(N)c3c2)cc1OCCCC(=O)O"
   ]
   node
@@ -449,6 +480,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COC(=O)CCCCOc1cc(NCc2ccc3nc(N)nc(N)c3c2)ccc1OC"
   ]
   node
@@ -463,6 +495,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COC(=O)c1ccc(COc2cc(NCc3ccc4nc(N)nc(N)c4c3)ccc2OC)cc1"
   ]
   node
@@ -477,6 +510,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(CNc2ccc3nc(N)nc(N)c3c2)c(OC)c1OC"
   ]
   node
@@ -491,6 +525,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(COC(=O)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -505,6 +540,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(CN(C)c2ccc3nc(N)nc(N)c3c2)c(OC)c1OC"
   ]
   node
@@ -519,6 +555,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "COc1cccc(Sc2cccc3nc(N)nc(N)c23)c1"
   ]
   node
@@ -533,6 +570,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(C)(C)c1ccc(Sc2c(N)ccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -547,6 +585,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3ccc(cc3)C#N)cccc2n1"
   ]
   node
@@ -561,6 +600,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "COc1cc(Sc2cccc3nc(N)nc(N)c23)cc(OC)c1OC"
   ]
   node
@@ -575,6 +615,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "COc1ccccc1Sc2cccc3nc(N)nc(N)c23"
   ]
   node
@@ -589,6 +630,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3ccc(F)cc3)cccc2n1"
   ]
   node
@@ -603,6 +645,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(C)COc1ccc2nc(N)nc(N)c2c1Sc3ccc(cc3)C(C)(C)C"
   ]
   node
@@ -617,6 +660,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3ccc(cc3)[N+](=O)[O-])cccc2n1"
   ]
   node
@@ -631,6 +675,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(C)(C)c1ccc(Sc2c(ccc3nc(N)nc(N)c23)C#N)cc1"
   ]
   node
@@ -645,6 +690,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "COc1ccc(Sc2cccc3nc(N)nc(N)c23)cc1OC"
   ]
   node
@@ -659,6 +705,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)C(C)(C)C#Cc2c(C)nc(N)nc2N"
   ]
   node
@@ -673,6 +720,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CCC(C)(C)c1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -687,6 +735,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3ccc(O)cc3)cccc2n1"
   ]
   node
@@ -701,6 +750,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "C\C(=C\c1coc2nc(N)nc(N)c12)\c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O.C\C(=C/c4coc5nc(N)nc(N)c45)\c6ccc(cc6)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -715,6 +765,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(C)c1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -729,6 +780,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cccc(c2)c3ccccc3"
   ]
   node
@@ -743,6 +795,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cc(ccc2OC)c3ccccc3"
   ]
   node
@@ -757,6 +810,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cc(OC)cc(c2)c3ccccc3"
   ]
   node
@@ -771,6 +825,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(c(OC)cc1C(C)C#Cc2c(C)nc(N)nc2N)c3ccccc3"
   ]
   node
@@ -785,6 +840,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 2"
     smiles "COc1cc(ccc1C(C)C#Cc2c(C)nc(N)nc2N)c3ccccc3"
   ]
   node
@@ -799,6 +855,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "NC1=NC(=O)c2cc(CSc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2N1"
   ]
   node
@@ -813,6 +870,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(COc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -827,6 +885,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2cc(ccc2n1)N(CC=C)Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -841,6 +900,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(ccc2n1)N(CC#C)Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -855,6 +915,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1ccc(CN2CCc3nc4nc(N)nc(N)c4cc3C2)cc1"
   ]
   node
@@ -869,6 +930,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1cc(Br)cc(C)c1NCc2cnc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -883,6 +945,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(Cl)cccc1NCc2cnc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -897,6 +960,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2cc(Cl)ccc2Cl)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -911,6 +975,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1cc(C)c(NCc2cnc3nc(N)nc(N)c3c2C)c(Cl)c1"
   ]
   node
@@ -925,6 +990,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2ccc3ncccc3c2)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -939,6 +1005,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COc1cc(ccc1NCc2cnc3nc(N)nc(N)c3c2C)c4ccccc4"
   ]
   node
@@ -953,6 +1020,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "CCc1c(CNc2cc(ccc2OC)C(F)(F)F)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -967,6 +1035,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNC2CCCc3ccccc23)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -981,6 +1050,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1ccc(NCc2cnc3nc(N)nc(N)c3c2C)cc1Br"
   ]
   node
@@ -995,6 +1065,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COc1cc(SCc2cnc3nc(N)nc(N)c3c2C)cc(OC)c1OC"
   ]
   node
@@ -1009,6 +1080,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2cc3CN(Cc4ccc(Cl)cc4Cl)CCc3nc2n1"
   ]
   node
@@ -1023,6 +1095,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CCc1c(CNc2cc(OC)ccc2OC)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1037,6 +1110,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2ccc3c(Cc4ccccc34)c2)cnc5nc(N)nc(N)c15"
   ]
   node
@@ -1051,6 +1125,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(SCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -1065,6 +1140,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccc(Cl)c3ccccc23)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -1079,6 +1155,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1cc(NCc2cnc3nc(N)nc(N)c3c2C)ccc1Br"
   ]
   node
@@ -1093,6 +1170,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1cc(Cl)ccc1NCc2cnc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -1107,6 +1185,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COCc1c(CNc2cc(OC)ccc2OC)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1121,6 +1200,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2cc(F)ccc2F)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1135,6 +1215,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COCc1c(CNc2ccc(OC)c(OC)c2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1149,6 +1230,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CCCOc1ccc(OCCC)c(NCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -1163,6 +1245,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccc3ccccc3c2)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -1177,6 +1260,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccc3c4ccccc4c5cccc2c35)cnc6nc(N)nc(N)c16"
   ]
   node
@@ -1191,6 +1275,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1cc(CCc2cnc3nc(N)nc(N)c3c2C)cc(OC)c1"
   ]
   node
@@ -1205,6 +1290,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COCc1c(CNc2cc(OC)c(OC)c(OC)c2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1219,6 +1305,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2cc(ccc2Br)C(F)(F)F)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1233,6 +1320,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CCCOc1ccc(NCc2cnc3nc(N)nc(N)c3c2C)cc1OC"
   ]
   node
@@ -1247,6 +1335,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCc1[nH]c(N)nc2nc(C)c(CCc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)c12"
   ]
   node
@@ -1261,6 +1350,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2cnc3nc(N)nc(O)c3c2"
   ]
   node
@@ -1275,6 +1365,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(CCC(=O)Nc4cccc(c4)B(O)O)C(=O)O"
   ]
   node
@@ -1289,6 +1380,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCc1[nH]c(N)nc2ncc(CCc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)c12"
   ]
   node
@@ -1303,6 +1395,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(cnc2n1)N(Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)C=O"
   ]
   node
@@ -1317,6 +1410,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(C(=O)O)C(F)(F)CC(=O)O"
   ]
   node
@@ -1331,6 +1425,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "OC(=O)CCC(NC(=O)c1ccc(CNc2ccc3ncnc(O)c3c2)cc1)C(=O)O"
   ]
   node
@@ -1345,6 +1440,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "OC(=O)CCC(NC(=O)c1ccc(cc1)N(CC#C)Cc2ccc3ncnc(O)c3c2)C(=O)O"
   ]
   node
@@ -1359,6 +1455,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)coc2n1"
   ]
   node
@@ -1373,6 +1470,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NC1=Nc2sc3cccc(CNc4ccc5C(=O)N(Cc5c4)[C@@H](CCC(=O)O)C(=O)O)c3c2C(=O)N1"
   ]
   node
@@ -1387,6 +1485,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NC1=Nc2sc3cccc(CNc4ccc(cc4)C(=O)N[C@@H](CCC(=O)O)C(=O)O)c3c2C(=O)N1"
   ]
   node
@@ -1401,6 +1500,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "COc1ccc(\C=C\2/CCCc3c2nc(N)nc3c4ccc(OC)c(OC)c4)cc1OC"
   ]
   node
@@ -1415,6 +1515,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3)C(=O)NC(CCCNC(=O)c4ccccc4C(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -1429,6 +1530,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "Cl.CC1(C)N=C(N)N=C(N)N1Cc2ccc(F)cc2"
   ]
   node
@@ -1443,6 +1545,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cl.NC1=NC2(CCC2)N(OCc3ccccc3)C(=N1)N"
   ]
   node
@@ -1457,6 +1560,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cl.CCC1(C)N=C(N)N=C(N)N1OCc2ccccc2"
   ]
   node
@@ -1471,6 +1575,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cl.NC1=NC(C2CC2)N(OCc3ccccc3)C(=N1)N"
   ]
   node
@@ -1485,6 +1590,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cl.CC1(C)N=C(N)N=C(N)N1OCc2ccccc2"
   ]
   node
@@ -1499,6 +1605,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Cl.NC1=NC2(CCCCCC2)N(OCc3ccccc3)C(=N1)N"
   ]
   node
@@ -1513,6 +1620,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3F)C(=O)NC(CCC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -1527,6 +1635,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(CCCCc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)coc2n1"
   ]
   node
@@ -1541,6 +1650,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc(Cc2cnc(N)nc2N)cc3NCCOc13"
   ]
   node
@@ -1555,6 +1665,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Nc1ncc(Cn2cc(CN3CCN(CC3)c4nc5N(C=C(C(=O)O)C(=O)c5cc4F)C6CC6)nn2)c(N)n1"
   ]
   node
@@ -1569,6 +1680,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "C\C(=C/c1coc2nc(N)nc(N)c12)\c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1583,6 +1695,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1c2ccc3c(c2)nc(C4CCCC4)n3Cc5ccc(cc5)S(=O)(=O)C"
   ]
   node
@@ -1597,6 +1710,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(=O)N(CC1CCc2nc(N)nc(N)c2N1)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1611,6 +1725,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2N3CN(CC3CCc2n1)c4ccc(cc4)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1625,6 +1740,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(CC1CCc2nc(N)nc(N)c2N1CC=C)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1639,6 +1755,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(CC1CCc2nc(N)nc(N)c2N1)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1653,6 +1770,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(CC1CCc2nc(N)nc(N)c2N1S(=O)(=O)c3ccc(C)cc3)c4ccc(cc4)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1667,6 +1785,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(CC1CCc2nc(N)nc(N)c2N1C=O)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1681,6 +1800,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc(CC#Cc2cnc(N)nc2N)cc(OC)c1OC"
   ]
   node
@@ -1695,6 +1815,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)C(C)C#Cc2cnc(N)nc2N"
   ]
   node
@@ -1709,6 +1830,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COC(C#Cc1c(C)nc(N)nc1N)c2cc(OC)c(OC)c(OC)c2"
   ]
   node
@@ -1723,6 +1845,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)C(O)C#Cc2c(C)nc(N)nc2N"
   ]
   node
@@ -1737,6 +1860,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(CCCc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)coc2n1"
   ]
   node
@@ -1751,6 +1875,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)[C@@H](C)C#Cc2c(C)nc(N)nc2N"
   ]
   node
@@ -1765,6 +1890,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Cc1[nH]c2N=C(N)NC(=O)c2c1Sc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -1779,6 +1905,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CC(=O)C1=C(C)N=C(NC1c2cccc(O)c2)SCCC(=O)O"
   ]
   node
@@ -1793,6 +1920,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCOC(=O)C1=C(C)N=C(NC1c2ccccc2)SCC(=O)c3ccc(Cl)c(c3)[N+](=O)[O-]"
   ]
   node
@@ -1807,6 +1935,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCOC(=O)CSC1=NC(C(=C(C)N1)C(=O)OCC)c2ccccc2"
   ]
   node
@@ -1821,6 +1950,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CC(=O)C1=C(C)NC(=S)NC1c2cccc(O)c2"
   ]
   node
@@ -1835,6 +1965,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCOC(=O)C1=C(C)NC(=S)NC1\C=C/c2ccccc2"
   ]
   node
@@ -1849,6 +1980,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CSc2ccc(Cl)cc2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -1863,6 +1995,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2cccc3ccccc23)[nH]c4nc(N)nc(N)c14"
   ]
   node
@@ -1877,6 +2010,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2ccc3ccccc3c2)[nH]c4nc(N)nc(N)c14"
   ]
   node
@@ -1891,6 +2025,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 2"
     smiles "CCc1c(Sc2ccc(Br)cc2)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -1905,6 +2040,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2ccc(Cl)c(Cl)c2)[nH]c3nc(C)nc(N)c13"
   ]
   node
@@ -1919,6 +2055,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2cccc3cccnc23)[nH]c4nc(N)nc(N)c14"
   ]
   node
@@ -1933,6 +2070,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2c(C)cccc2C)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -1947,6 +2085,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(NCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -1961,6 +2100,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(cc1N(C)Cc2cnc3nc(N)nc(N)c3c2C)C(F)(F)F"
   ]
   node
@@ -1975,6 +2115,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2c1C)c3cccc4CCCCc34"
   ]
   node
@@ -1989,6 +2130,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(SCc2cnc3nc(N)nc(N)c3c2C)cc1OC"
   ]
   node
@@ -2003,6 +2145,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1cccc(SCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -2017,6 +2160,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(NCc2cnc3nc(N)nc(N)c3c2)cc(OC)c1OC"
   ]
   node
@@ -2031,6 +2175,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(c1)N2CCOCC2)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -2045,6 +2190,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cc(OC)cc(c2)N3CCOCC3"
   ]
   node
@@ -2059,6 +2205,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(c1)c2ccncc2)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -2073,6 +2220,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cc(OC)cc(c2)c3ccncc3"
   ]
   node
@@ -2087,6 +2235,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cc(OC)cc(c2)c3cccc4cnccc34"
   ]
   node
@@ -2101,6 +2250,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cc(OC)cc(c2)c3cccc4cnccc34"
   ]
   node
@@ -2115,6 +2265,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cc(OC)cc(c2)c3ccc4OCCOc4c3"
   ]
   node
@@ -2129,6 +2280,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1ccc(C)c(NCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -2143,6 +2295,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccc(Cl)cc2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -2157,6 +2310,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(CNc3ccc(Cl)cc3)cnc2n1"
   ]
   node
@@ -2171,6 +2325,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1cc(NCc2cnc3nc(N)nc(N)c3c2C)cc(OC)c1OC"
   ]
   node
@@ -2185,6 +2340,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1cc(NCc2cnc3nc(N)nc(N)c3c2C)cc(OC)c1"
   ]
   node
@@ -2199,6 +2355,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CSc2cccc3ccccc23)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -2213,6 +2370,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CCOc1cc(Cc2cnc(N)nc2N)cc(OC)c1OC"
   ]
   node
@@ -2227,6 +2385,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(C)c(NCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -2241,6 +2400,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(Nc2cnc3nc(N)nc(N)c3c2)cc1"
   ]
   node
@@ -2255,6 +2415,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(Nc2cnc3nc(N)nc(N)c3c2)c1"
   ]
   node
@@ -2269,6 +2430,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(Nc2cnc3nc(N)nc(N)c3c2)cc(OC)c1OC"
   ]
   node
@@ -2283,6 +2445,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Cc1ccc(Nc2cnc3nc(N)nc(N)c3c2)cc1"
   ]
   node
@@ -2297,6 +2460,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CC(C)c1ccc(Nc2cnc3nc(N)nc(N)c3c2)cc1"
   ]
   node
@@ -2311,6 +2475,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(Nc3ccc4ccccc4c3)cnc2n1"
   ]
   node
@@ -2325,6 +2490,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(Nc3ccc(cc3)[N+](=O)[O-])cnc2n1"
   ]
   node
@@ -2339,6 +2505,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(Nc3cc(F)ccc3F)cnc2n1"
   ]
   node
@@ -2353,6 +2520,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(Nc3cc(F)c(F)c(F)c3)cnc2n1"
   ]
   node
@@ -2367,6 +2535,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(cc1)N(C)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -2381,6 +2550,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccccc1N(C)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -2395,6 +2565,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)N(C)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -2409,6 +2580,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CN(c1ccc(C)cc1)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -2423,6 +2595,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CC(C)c1ccc(cc1)N(C)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -2437,6 +2610,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CN(c1cnc2nc(N)nc(N)c2c1)c3cccc4ccccc34"
   ]
   node
@@ -2451,6 +2625,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CN(c1cnc2nc(N)nc(N)c2c1)c3cc(F)ccc3F"
   ]
   node
@@ -2465,6 +2640,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CCOc1ccc(OCC)c(c1)N(C)Cc2cnc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -2479,6 +2655,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2cccc3ccccc23)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -2493,6 +2670,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(CSC(=S)N3CCN(CC3)c4ccc(F)cc4)ccc2n1"
   ]
   node
@@ -2507,6 +2685,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(CSC(=S)N3CCN(CC3)c4ccc(cc4)[N+](=O)[O-])ccc2n1"
   ]
   node
@@ -2521,6 +2700,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 2"
     smiles "COc1ccc(cc1)N2CCN(CC2)C(=S)SCc3ccc4nc(N)nc(N)c4c3"
   ]
   node
@@ -2535,6 +2715,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COc1cc(NCc2cnc3nc(N)nc(N)c3c2C)cc(c1)C(F)(F)F"
   ]
   node
@@ -2549,6 +2730,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CSc2cccc(Cl)c2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -2563,6 +2745,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "NC1=Nc2[nH]cc(Cc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)c2C(=O)N1"
   ]
   node
@@ -2577,6 +2760,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)NO)C(=O)O"
   ]
   node
@@ -2591,6 +2775,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCCc1cc(Cc2cnc(N)nc2N)cc(CC=C)c1O"
   ]
   node
@@ -2605,6 +2790,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2c(OCc3cccc(Cl)c3)cccc2n1"
   ]
   node
@@ -2619,6 +2805,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2c(OCc3ccccc3F)cccc2n1"
   ]
   node
@@ -2633,6 +2820,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(COc3ccc(F)cc3F)cccc2n1"
   ]
   node
@@ -2647,6 +2835,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(OCC3CCN(Cc4cccc(Cl)c4)CC3)cccc2n1"
   ]
   node
@@ -2661,6 +2850,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(COc3ccccc3F)cccc2n1"
   ]
   node
@@ -2675,6 +2865,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "C[C@H](Oc1cccc2nc(N)nc(N)c12)c3cccc(Cl)c3"
   ]
   node
@@ -2689,6 +2880,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2c(COc3cccc(Cl)c3)cccc2n1"
   ]
   node
@@ -2703,6 +2895,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCc1cc(Cc2cnc(N)nc2N)cc(CC)c1O"
   ]
   node
@@ -2717,6 +2910,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCCc1cc(Cc2cnc(N)nc2N)cc(CC)c1O"
   ]
   node
@@ -2731,6 +2925,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CC(C)(C)c1cc(Cc2cnc(N)nc2N)cc(c1O)C(C)(C)C"
   ]
   node
@@ -2745,6 +2940,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COc1cccc(SCc2cnc3nc(N)nc(N)c3c2C)c1"
   ]
   node
@@ -2759,6 +2955,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCCc1cc(Cc2cnc(N)nc2N)cc(OC)c1OC"
   ]
   node
@@ -2773,6 +2970,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCCc1cc(Cc2cnc(N)nc2N)cc(CC)c1OC"
   ]
   node
@@ -2787,6 +2985,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2cccc3CCCCc23)cnc4nc(N)nc(N)c14"
   ]
   node
@@ -2801,6 +3000,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(NCc3ccccc3)cnc2n1"
   ]
   node
@@ -2815,6 +3015,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(NCc2cnc3nc(N)nc(N)c3c2)cc1)C(=O)O"
   ]
   node
@@ -2829,6 +3030,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1c(C)cc(Cc2cnc(N)nc2N)cc1C"
   ]
   node
@@ -2843,6 +3045,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(NCc2ccc3nc(N)nc(O)c3c2Cl)cc1)C(=O)O"
   ]
   node
@@ -2857,6 +3060,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "NCCCC(NC(=O)c1ccc(OCc2ccc3nc(N)nc(O)c3c2)cc1)C(=O)O"
   ]
   node
@@ -2871,6 +3075,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "Cc1cc(Cc2cnc(N)nc2N)cc3CC(C)(C)Oc13"
   ]
   node
@@ -2885,6 +3090,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CCc1ccc(Cc2cnc(N)nc2N)cc1CC"
   ]
   node
@@ -2899,6 +3105,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc(C)c2ccc(Cc3cnc(N)nc3N)cc2n1"
   ]
   node
@@ -2913,6 +3120,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCC(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -2927,6 +3135,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CCCc1cc(Cc2cnc(N)nc2N)cc3CC(C)(C)Oc13"
   ]
   node
@@ -2941,6 +3150,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCC(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2cnc3nc(N)nc(N)c3n2"
   ]
   node
@@ -2955,6 +3165,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(CN(C=O)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -2969,6 +3180,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CNC(C)[C@@H]1CC[C@@H](N)[C@@H](O[C@@H]2[C@@H](N)C[C@@H](N)[C@H](O[C@H]3OC[C@](C)(O)[C@H](NC)[C@H]3O)[C@H]2O)O1.CN[C@@H]4[C@@H](O)[C@@H](O[C@H]5[C@H](N)C[C@H](N)[C@@H](O[C@H]6O[C@H](CN)CC[C@H]6N)[C@@H]5O)OC[C@]4(C)O.CN[C@@H]7[C@@H](O)[C@@H](O[C@H]8[C@H](N)C[C@H](N)[C@@H](O[C@H]9O[C@@H](CC[C@H]9N)C(C)N)[C@@H]8O)OC[C@]7(C)O"
   ]
   node
@@ -2983,6 +3195,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc2nc(N)nc(N)c2c1)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -2997,6 +3210,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2ccc3nc(N)nc(N)c3c2"
   ]
   node
@@ -3011,6 +3225,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(C(O)CC(=O)O)C(=O)O"
   ]
   node
@@ -3025,6 +3240,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCC(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(CC(=C)C(=O)O)C(=O)O"
   ]
   node
@@ -3039,6 +3255,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CC1N(Cc2cnc(N)nc2N)CCc3c1ccc4c5ccccc5n(C)c34"
   ]
   node
@@ -3053,6 +3270,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCC(CC)n1ccc2c1ccc3nc(N)nc(N)c23"
   ]
   node
@@ -3067,6 +3285,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(CN(C)c2cnc3nc(N)nc(N)c3c2)c1"
   ]
   node
@@ -3081,6 +3300,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Clc1cc(Cl)c(Oc2cccc(CC3=CN4C=C(Br)C=CC4=NC3=O)c2)nc1Cl"
   ]
   node
@@ -3095,6 +3315,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Fc1ccc(CC2=CN3C=CC=CC3=NC2=O)c(c1)C(F)(F)F"
   ]
   node
@@ -3109,6 +3330,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 2"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cc(OC)cc(c2)c3ccncc3"
   ]
   node
@@ -3123,6 +3345,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2N=C(CCCCc3ccccc3)COc2n1"
   ]
   node
@@ -3137,6 +3360,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCCCCC1=Nc2c(O)nc(N)nc2OC1"
   ]
   node
@@ -3151,6 +3375,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(cc2OC)c3ccc(cc3)C#N"
   ]
   node
@@ -3165,6 +3390,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(cc2OC)c3ccc(OC(=O)N)cc3"
   ]
   node
@@ -3179,6 +3405,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(cc2OC)c3ccc(cc3)C(=O)OC"
   ]
   node
@@ -3193,6 +3420,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(cc2OC)c3ccc(cc3)N(C)C"
   ]
   node
@@ -3207,6 +3435,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(cc2OC)c3ccc(F)cc3"
   ]
   node
@@ -3221,6 +3450,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(nc2)c3ccccc3"
   ]
   node
@@ -3235,6 +3465,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2ccc(nc2)c3ccc(C)cc3"
   ]
   node
@@ -3249,6 +3480,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cnc(nc2)c3ccccc3"
   ]
   node
@@ -3263,6 +3495,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(c1)c2sc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -3277,6 +3510,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(NCc2ccc3nc(N)nc(N)c3c2)cc1)C(=O)O"
   ]
   node
@@ -3291,6 +3525,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(CN(C)c2ccc3nc(N)nc(N)c3c2)c1"
   ]
   node
@@ -3305,6 +3540,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(COC(=O)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -3319,6 +3555,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(CNc2cnc3nc(N)nc(N)c3c2)c1"
   ]
   node
@@ -3333,6 +3570,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3ccc(cc3)N4CCOCC4)cccc2n1"
   ]
   node
@@ -3347,6 +3585,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(C)(C)c1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -3361,6 +3600,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "N[C@H](CCC(=O)O)C(=O)NC(=O)c1ccc(CNc2cnc3nc(N)nc(N)c3c2)cc1"
   ]
   node
@@ -3375,6 +3615,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "COc1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -3389,6 +3630,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(CNc2cnc3nc(N)nc(N)c3c2)cc(OC)c1OC"
   ]
   node
@@ -3403,6 +3645,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -3417,6 +3660,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CCN(CC)c1ccc(Sc2cccc3nc(N)nc(N)c23)cc1"
   ]
   node
@@ -3431,6 +3675,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC1=C(Sc2ccc(cc2)C(=O)NC(CCC(=O)O)C(=O)O)C3C(N1)N=C(N)NC3=O"
   ]
   node
@@ -3445,6 +3690,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc(cc1)C(=O)NC(=O)[C@H](N)CCC(=O)O)c2cnc3nc(N)nc(N)c3c2"
   ]
   node
@@ -3459,6 +3705,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Sc3cccc(Cl)c3)cccc2n1"
   ]
   node
@@ -3473,6 +3720,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -3487,6 +3735,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1cc(Cl)c(C)cc1NCc2cnc3nc(N)nc(N)c3c2C"
   ]
   node
@@ -3501,6 +3750,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2ccc(OC(F)F)cc2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -3515,6 +3765,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "COCc1c(CNc2ccc(Cl)cc2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -3529,6 +3780,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 2"
     smiles "Cc1c(CNc2ccccc2OC(F)F)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -3543,6 +3795,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1ccc(NCc2cnc3nc(N)nc(N)c3c2C)cc1Cl"
   ]
   node
@@ -3557,6 +3810,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1ccc(cc1Cc2cnc(N)nc2N)C#CCCC(=O)O"
   ]
   node
@@ -3571,6 +3825,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(O)c2cc(CN(CC#N)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -3585,6 +3840,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)N[C@H](C[C@@H](F)C(=O)O)C(=O)O"
   ]
   node
@@ -3599,6 +3855,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1ccc(CN(C)c2cnc3nc(N)nc(N)c3c2)c(OC)c1OC"
   ]
   node
@@ -3613,6 +3870,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1ccc(NCc2cnc3nc(N)nc(N)c3c2C)cc1F"
   ]
   node
@@ -3627,6 +3885,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(CN2CCc3nc4nc(N)nc(N)c4cc3C2)cc(OC)c1"
   ]
   node
@@ -3641,6 +3900,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "CCOc1ccc(NCc2cnc3nc(N)nc(N)c3c2C)cc1OC"
   ]
   node
@@ -3655,6 +3915,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccc3ccc4cccc5ccc2c3c45)cnc6nc(N)nc(N)c16"
   ]
   node
@@ -3669,6 +3930,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(NCc2ccc3nc(N)nc(N)c3n2)cc1)C(=O)O"
   ]
   node
@@ -3683,6 +3945,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Cc1c(NCc2ccc(cc2)C(=O)NC(CCC(=O)O)C(=O)O)ccc3nc(N)nc(O)c13"
   ]
   node
@@ -3697,6 +3960,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1c2ccc(Cl)cc2"
   ]
   node
@@ -3711,6 +3975,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "COc1cc(CN(C)c2cnc3nc(N)nc(N)c3c2)cc(OC)c1"
   ]
   node
@@ -3725,6 +3990,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(ccc1C(C)C#Cc2c(C)nc(N)nc2N)c3ccccc3C"
   ]
   node
@@ -3739,6 +4005,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(ccc1C(C)C#Cc2c(C)nc(N)nc2N)c3c(C)cccc3C"
   ]
   node
@@ -3753,6 +4020,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cc(ccc2OC)c3ccccc3"
   ]
   node
@@ -3767,6 +4035,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cccc(c2)c3ccncc3"
   ]
   node
@@ -3781,6 +4050,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cccc(c2)c3cccnc3"
   ]
   node
@@ -3795,6 +4065,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 2"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cccc(c2)c3cncnc3"
   ]
   node
@@ -3809,6 +4080,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NC1=NC(=O)c2cc(NCc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2N1"
   ]
   node
@@ -3823,6 +4095,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2c(Cl)c(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -3837,6 +4110,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCc1[nH]c2nc(N)nc(O)c2c1Sc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -3851,6 +4125,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1ccc(OCCCCC(=O)O)cc1Cc2cnc(N)nc2N"
   ]
   node
@@ -3865,6 +4140,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -3879,6 +4155,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "COc1cc(Cc2cnc3nc(N)nc(N)c3c2C)cc(OC)c1"
   ]
   node
@@ -3893,6 +4170,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2c(Cl)c(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2n1"
   ]
   node
@@ -3907,6 +4185,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2ccc(Cl)cc2Cl)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -3921,6 +4200,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NC1=NC(=O)c2cc(CN(CC#C)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)ccc2N1"
   ]
   node
@@ -3935,6 +4215,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(NCc2ccc3nc(N)nc(N)c3c2Cl)cc1)C(=O)O"
   ]
   node
@@ -3949,6 +4230,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2ccccc2)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -3963,6 +4245,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1c(Sc2ccc(cc2)[N+](=O)[O-])[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -3977,6 +4260,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(CNc3ccc(cc3)C(=O)NC(CCS(=O)(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -3991,6 +4275,7 @@ graph
     k 0
     bestFold 20
     module "m07"
+    oplraregregion "region 1"
     smiles "CC(Oc1cccc2nc(N)nc(N)c12)c3cccc(Cl)c3"
   ]
   node
@@ -4005,6 +4290,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(SCc2ccc3nc(N)nc(O)c3c2)cc1)C(=O)O"
   ]
   node
@@ -4019,6 +4305,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc2CCN(Cc3cnc(N)nc3N)[C@@H](C)c2c4OCOc14"
   ]
   node
@@ -4033,6 +4320,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc3CN(Cc4ccccc4)CCc3nc2n1"
   ]
   node
@@ -4047,6 +4335,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3)C(=O)NC(CCC(=O)Nc4cccc(c4)C(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -4061,6 +4350,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NC1=NC(=O)c2cc(CN(CC#C)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)ccc2N1"
   ]
   node
@@ -4075,6 +4365,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(CC(F)(F)C(=O)O)C(=O)O"
   ]
   node
@@ -4089,6 +4380,7 @@ graph
     k 0
     bestFold 20
     module "m03"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c(c(COCc2ccccc2)n1)c3ccc(NCc4ccc(Cl)cc4)cc3"
   ]
   node
@@ -4103,6 +4395,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1ncnc2ncc(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)nc12"
   ]
   node
@@ -4117,6 +4410,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(Cc1coc2nc(N)nc(N)c12)c3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -4131,6 +4425,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2cnc3nc(N)nc(N)c3n2"
   ]
   node
@@ -4145,6 +4440,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "NCCCC(NC(=O)c1ccc(SCc2ccc3ncnc(O)c3c2)cc1)C(=O)O"
   ]
   node
@@ -4159,6 +4455,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(OC)c1OC)N(CC#C)Cc2ccc3ncnc(O)c3c2"
   ]
   node
@@ -4173,6 +4470,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CC(C)c1cc(Cc2cnc(N)nc2N)cc(C(C)C)c1O"
   ]
   node
@@ -4187,6 +4485,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(ccc2n1)N(CC=C)Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -4201,6 +4500,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3)C(=O)NC(CCCCNC(=O)c4ccccc4C(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -4215,6 +4515,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "Cc1sc2N=C(N)NC(=O)c2c1Sc3ccc(F)cc3"
   ]
   node
@@ -4229,6 +4530,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CC(=O)NS(=O)(=O)c1ccc(N)cc1"
   ]
   node
@@ -4243,6 +4545,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCOC(=O)C1=C(C)NC(=S)NC1c2ccccc2"
   ]
   node
@@ -4257,6 +4560,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(c1)c2c(C)cccc2C)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4271,6 +4575,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(cc(c1)c2c(cccc2C(C)C)C(C)C)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4285,6 +4590,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(ccc1c2ccccc2C)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4299,6 +4605,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(ccc1c2c(cccc2C(C)C)C(C)C)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4313,6 +4620,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2NC(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)CCc2n1"
   ]
   node
@@ -4327,6 +4635,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2N(CC=C)C(CNc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)CCc2n1"
   ]
   node
@@ -4341,6 +4650,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Nc1nc(N)c2N(CC=C)C(CN(CC=C)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)CCc2n1"
   ]
   node
@@ -4355,6 +4665,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2N(CC(Br)CBr)C(CNc3ccc(cc3Br)C(=O)NC(CCC(=O)O)C(=O)O)CCc2n1"
   ]
   node
@@ -4369,6 +4680,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCCc1c(Sc2c(C)cccc2C)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -4383,6 +4695,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "COc1ccc(Sc2[nH]c3nc(N)nc(N)c3c2C(C)C)cc1"
   ]
   node
@@ -4397,6 +4710,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(CC#Cc2c(C)nc(N)nc2N)c1"
   ]
   node
@@ -4411,6 +4725,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2cccc(OC)c2OC"
   ]
   node
@@ -4425,6 +4740,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "Cc1sc2N=C(N)NC(=O)c2c1Sc3ccc(cc3)[N+](=O)[O-]"
   ]
   node
@@ -4439,6 +4755,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(Sc2c(C)[nH]c3N=C(N)NC(=O)c23)c1"
   ]
   node
@@ -4453,6 +4770,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "Cc1sc2N=C(N)NC(=O)c2c1Sc3ccc4ccccc4c3"
   ]
   node
@@ -4467,6 +4785,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "Cc1sc2N=C(N)NC(=O)c2c1Sc3ccncc3"
   ]
   node
@@ -4481,6 +4800,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CCc2ccccc2"
   ]
   node
@@ -4495,6 +4815,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCCc1c(Sc2c(Cl)cccc2Cl)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -4509,6 +4830,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCCc1c(Sc2ccccc2)[nH]c3nc(N)nc(N)c13"
   ]
   node
@@ -4523,6 +4845,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(CC#Cc2cnc(N)nc2N)c1"
   ]
   node
@@ -4537,6 +4860,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "Cc1sc2N=C(N)NC(=O)c2c1Sc3ccc(cc3)C(=O)N(CCC(=O)O)C(=O)O"
   ]
   node
@@ -4551,6 +4875,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc4ccccc4c3"
   ]
   node
@@ -4565,6 +4890,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccncc3"
   ]
   node
@@ -4579,6 +4905,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -4593,6 +4920,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccccc3Cl"
   ]
   node
@@ -4607,6 +4935,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3cccc(Cl)c3"
   ]
   node
@@ -4621,6 +4950,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc(Cl)c(Cl)c3"
   ]
   node
@@ -4635,6 +4965,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3cc(Cl)cc(Cl)c3"
   ]
   node
@@ -4649,6 +4980,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3cc(OC)cc(OC)c3"
   ]
   node
@@ -4663,6 +4995,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3cc(OC)ccc3OC"
   ]
   node
@@ -4677,6 +5010,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc(Cl)cc3"
   ]
   node
@@ -4691,6 +5025,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc(cc3)[N+](=O)[O-]"
   ]
   node
@@ -4705,6 +5040,7 @@ graph
     k 0
     bestFold 20
     module "m05"
+    oplraregregion "region 1"
     smiles "CCc1sc2N=C(N)NC(=O)c2c1Sc3ccc(Br)cc3"
   ]
   node
@@ -4719,6 +5055,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CCC(Cc1coc2nc(N)cc(N)c12)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -4733,6 +5070,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1ccc(cc1)c2cc(OC)cc(c2)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4747,6 +5085,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1cc(CC#Cc2c(C)nc(N)nc2N)cc(c1)c3c(C)cccc3C"
   ]
   node
@@ -4761,6 +5100,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(c1)C(O)C#Cc2c(C)nc(N)nc2N"
   ]
   node
@@ -4775,6 +5115,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COc1ccc(OC)c(c1)C(C)C#Cc2c(C)nc(N)nc2N"
   ]
   node
@@ -4789,6 +5130,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCC(C#Cc1c(C)nc(N)nc1N)c2cc(OC)c(OC)c(OC)c2"
   ]
   node
@@ -4803,6 +5145,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "CCc1nc(N)nc(N)c1C#CC(C)c2cc(OC)c(OC)c(OC)c2"
   ]
   node
@@ -4817,6 +5160,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CCc1cc(Cc2cnc(N)nc2N)cc(CC)c1CC"
   ]
   node
@@ -4831,6 +5175,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 1"
     smiles "COC(C#Cc1c(C)nc(N)nc1N)c2cc(OC)ccc2OC"
   ]
   node
@@ -4845,6 +5190,7 @@ graph
     k 0
     bestFold 20
     module "m04"
+    oplraregregion "region 2"
     smiles "COc1cc(cc(c1)c2ccc(C)cc2)C(C)C#Cc3c(C)nc(N)nc3N"
   ]
   node
@@ -4859,6 +5205,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "CCc1cc(Cc2cnc(N)nc2N)cc3CC(C)Oc13"
   ]
   node
@@ -4873,6 +5220,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CCOc1cc(Cc2cnc(N)nc2N)cc3OCOc13"
   ]
   node
@@ -4887,6 +5235,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "COc1ccccc1C(=CC2=COC3=NC(=N)NC(=C23)N)C4CC4"
   ]
   node
@@ -4901,6 +5250,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "COc1ccccc1C(=CC2=COC3=NC(=N)NC(=C23)N)C(C)C"
   ]
   node
@@ -4915,6 +5265,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCCC(=CC1=COC2=NC(=N)NC(=C12)N)c3ccccc3OC"
   ]
   node
@@ -4929,6 +5280,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 2"
     smiles "Cc1c(oc2nc(N)nc(N)c12)Sc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O"
   ]
   node
@@ -4943,6 +5295,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "COc1ccccc1C(Cc2coc3nc(N)nc(N)c23)C4CC4"
   ]
   node
@@ -4957,6 +5310,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "CCC(C)C(=CC1=COC2=NC(=N)NC(=C12)N)c3ccccc3OC"
   ]
   node
@@ -4971,6 +5325,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 2"
     smiles "COc1cc(C)c2cc(Cc3cnc(N)nc3N)cc(C)c2n1"
   ]
   node
@@ -4985,6 +5340,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "CCCC(Cc1coc2nc(N)nc(N)c12)c3ccccc3OC"
   ]
   node
@@ -4999,6 +5355,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "COc1ccccc1\C(=C/c2coc3nc(N)nc(N)c23)\C"
   ]
   node
@@ -5013,6 +5370,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 2"
     smiles "COc1ccccc1C(CC(C)C)Cc2coc3nc(N)nc(N)c23"
   ]
   node
@@ -5027,6 +5385,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(Cc1coc2nc(N)cc(N)c12)c3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O"
   ]
   node
@@ -5041,6 +5400,7 @@ graph
     k 0
     bestFold 20
     module "other"
+    oplraregregion "region 1"
     smiles "COc1ccccc1\C(=C\c2coc3nc(N)nc(N)c23)\C"
   ]
   node
@@ -5055,6 +5415,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2c(CNc3ccc(cc3)C(=O)N[C@@H](CCC(=O)O)C(=O)O)c[nH]c2n1"
   ]
   node
@@ -5069,6 +5430,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(=O)c1ccc(cc1)N(CC#C)Cc2ccc3nc(N)nc(O)c3c2"
   ]
   node
@@ -5083,6 +5445,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(CN(CC#C)c3ccc(cc3)C#N)ccc2n1"
   ]
   node
@@ -5097,6 +5460,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(CN(CC#C)c3ccc(cc3)[N+](=O)[O-])ccc2n1"
   ]
   node
@@ -5111,6 +5475,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CC(=O)c1ccc(cc1)N(CC#C)Cc2ccc3ncnc(O)c3c2"
   ]
   node
@@ -5125,6 +5490,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CNc3ccc(cc3)C(=O)NC(CC(=C)C(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -5139,6 +5505,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2cc(ccc2n1)N(Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)C=O"
   ]
   node
@@ -5153,6 +5520,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(N)c2nc(CCc3ccc(cc3)C(=O)NC(C(O)CC(=O)O)C(=O)O)cnc2n1"
   ]
   node
@@ -5167,6 +5535,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2ccc3nc(N)nc(O)c3c2"
   ]
   node
@@ -5181,6 +5550,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "COc1cc2CCN(Cc3cnc(N)nc3N)C(C)c2cc1OC"
   ]
   node
@@ -5195,6 +5565,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "Nc1ncc(CN2CCc3ccccc3C2)c(N)n1"
   ]
   node
@@ -5209,6 +5580,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "Nc1ncc(CN2CCc3c(C2)[nH]c4ccccc34)c(N)n1"
   ]
   node
@@ -5223,6 +5595,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "Nc1nc(O)c2cc(ccc2n1)N(Cc3ccc(cc3)C(=O)NC(CCC(=O)O)C(=O)O)C=O"
   ]
   node
@@ -5237,6 +5610,7 @@ graph
     k 0
     bestFold 20
     module "m06"
+    oplraregregion "region 1"
     smiles "CC1N(Cc2cnc(N)nc2N)CCn3c1cc(Cc4ccccc4)c3c5ccccc5"
   ]
   node
@@ -5251,6 +5625,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2cccc(Cl)c2)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -5265,6 +5640,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1ccc(cc1)C(=O)NC(CCC(=O)O)C(=O)O)c2ccc3nc(N)nc(O)c3c2C"
   ]
   node
@@ -5279,6 +5655,7 @@ graph
     k 0
     bestFold 20
     module "m02"
+    oplraregregion "region 1"
     smiles "Cc1c(CNc2ccccc2Cl)cnc3nc(N)nc(N)c13"
   ]
   node
@@ -5293,6 +5670,7 @@ graph
     k 0
     bestFold 20
     module "m01"
+    oplraregregion "region 1"
     smiles "CN(Cc1cnc2nc(N)nc(N)c2n1)c3ccc(cc3)C(=O)NC(CC(F)(F)CN)C(=O)O"
   ]
   edge

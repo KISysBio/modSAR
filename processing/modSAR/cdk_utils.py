@@ -5,6 +5,7 @@
 import os
 import py4j
 import subprocess
+import pandas as pd
 
 from py4j.java_gateway import JavaGateway, GatewayParameters
 

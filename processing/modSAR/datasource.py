@@ -14,7 +14,7 @@ import pandas as pd
 from chembl_webresource_client.new_client import new_client
 from .utils import print_progress_bar
 from .dataset import QSARDataset
-from .cdk_utils import CDKDescriptors
+from .cdk_utils import CDKDescriptors, JavaCDKBridge
 
 
 def build_qsar_dataset(data_source):
@@ -31,12 +31,14 @@ def build_qsar_dataset(data_source):
             missing_attributes.append(['compound_id_column'])
 
         if (len(missing_attributes) > 1):
-            raise ValueError('DataSource %s does not have required attributes: %s' % \
+            raise ValueError('DataSource %s does not have required attributes: %s' %
                              (data_source, ', '.join(missing_attributes)))
 
     check_valid_data_source(data_source)
 
     clean_df = Preprocessing().clean_dataset(data_source)
+    java_cdk_bridge = JavaCDKBridge()
+    java_cdk_bridge.start_cdk_java_bridge()
     descriptors = CDKDescriptors().calculate(clean_df, data_source.smiles_column)
     qsar_dataset = QSARDataset(descriptors, activity=clean_df, metadata=clean_df)
     return qsar_dataset
@@ -89,7 +91,7 @@ class Preprocessing:
         bioactivities_df = data_source.bioactivities_df.copy()
 
         if type(data_source) is ChEMBLApiDataSource:
-            ## Perform initial filter on bioactivities
+            # Perform initial filter on bioactivities
             bioactivities_df = self._default_filter_chembl(bioactivities_df)
         else:
             raise ValueError("Data source not recognized: %s" % type(data_source))
@@ -134,7 +136,7 @@ class ChEMBLApiDataSource(DataSource):
 
         Example of use:
 
-            chembl_data_source = ChEMBLApiDataSource(target_id='CHEMBL202', endpoints='IC50')
+            chembl_data_source = ChEMBLApiDataSource(target_id='CHEMBL202', standard_types=['IC50'])
             chembl202_dataset = chembl_data_source.get_qsar_dataset()
     """
 
@@ -169,7 +171,17 @@ class ChEMBLApiDataSource(DataSource):
                                          for std_type in self.standard_types])
 
             if is_valid_std_type:
-                compound_df = pd.DataFrame(compound_dict, index=pd.Series(0))
+                # Drop unused columns
+                compound_dict.pop('activity_properties', None)
+                # Capture Ligand Efficiency
+                lig_efficiency = compound_dict.pop('ligand_efficiency', None)
+
+                compound_df = pd.DataFrame(compound_dict, index=[0])
+                if lig_efficiency is not None:
+                    lig_efficiency_df = pd.DataFrame(lig_efficiency, index=[0])
+                    lig_efficiency_df.columns = ['ligand_efficiency_%s' % col
+                                                 for col in lig_efficiency_df.columns]
+                    compound_df = pd.concat([compound_df, lig_efficiency_df], axis=1)
             else:
                 compound_df = pd.DataFrame(columns=compound_dict.keys())
 
@@ -182,7 +194,7 @@ class ChEMBLApiDataSource(DataSource):
                            prefix='Progress:', suffix='Complete', length=50)
         bioactivities_df = [get_compound_df(idx, compound_dict)
                             for idx, compound_dict in enumerate(result)]
-        bioactivities_df = pd.concat(bioactivities_df)
+        bioactivities_df = pd.concat(bioactivities_df, sort=False).reset_index(drop=True)
 
         self.bioactivities_df = bioactivities_df
 
