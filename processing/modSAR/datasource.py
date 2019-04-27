@@ -44,7 +44,7 @@ def build_qsar_dataset(data_source):
     descriptors_df = cdk_utils.calculate_descriptors(clean_df, data_source.smiles_column)
 
     # Remove empty columns
-    num_columns = descriptors_dataset.shape[0]
+    num_columns = descriptors_df.shape[0]
     is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == num_columns
     descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
     import ipdb; ipdb.set_trace()
