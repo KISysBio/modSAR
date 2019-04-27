@@ -1,7 +1,7 @@
 FROM jupyter/scipy-notebook:50247fea877a
 
-ARG CDK_VERSION=2.2
-ARG JAR_PATH=/opt
+ENV CDK_VERSION=2.2
+ENV JAR_PATH=/opt
 
 ENV PATH="/opt/cplex:${PATH}"
 WORKDIR /mnt/code

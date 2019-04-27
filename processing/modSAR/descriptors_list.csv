@@ -6,7 +6,6 @@
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.RuleOfFiveDescriptor"
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.RotatableBondsCountDescriptor"
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.MannholdLogPDescriptor"
-"constitutional","org.openscience.cdk.qsar.descriptors.molecular.LongestAliphaticChainDescriptor"
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.LargestPiSystemDescriptor"
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.LargestChainDescriptor"
 "constitutional","org.openscience.cdk.qsar.descriptors.molecular.BondCountDescriptor"

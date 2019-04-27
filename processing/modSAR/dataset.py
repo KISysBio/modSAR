@@ -36,20 +36,15 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, target_id, bioactivities_df,
-                 activity_column='median_pchembl_value'):
-
+    def __init__(self, descriptors_df, activity_values, target_id, metadata=None):
+        self.descriptors_df = descriptors_df
+        self.activity = activity
         self.target_id = target_id
-        # self.metadata.set_index("ID", inplace=True)
-
-        self.features = descriptors
-        # self.features.set_index(self.metadata["ID"])
-
-        # self.normalised_features = excelFile.parse("normalised_features")
-        # self.normalised_features.set_index(self.metadata["ID"], inplace=True)
+        self.features = descriptors_df
+        self.metadata = metadata
 
         # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
-        super().__init__(self.target_id, self.features, activity_column)
+        # super().__init__(self.target_id, self.features, activity_column)
 
     def __str__(self):
         return self.__repr__()

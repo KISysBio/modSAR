@@ -14,11 +14,10 @@ import pandas as pd
 from chembl_webresource_client.new_client import new_client
 from .utils import print_progress_bar
 from .dataset import QSARDataset
-from .cdk_utils import CDKDescriptors, JavaCDKBridge
+from .cdk_utils import JavaCDKBridge, CDKUtils
 
 
 def build_qsar_dataset(data_source):
-    # TODO: Complex this flow, make sure it works
 
     def check_valid_data_source(data_source):
 
@@ -37,10 +36,21 @@ def build_qsar_dataset(data_source):
     check_valid_data_source(data_source)
 
     clean_df = Preprocessing().clean_dataset(data_source)
-    java_cdk_bridge = JavaCDKBridge()
-    java_cdk_bridge.start_cdk_java_bridge()
-    descriptors = CDKDescriptors().calculate(clean_df, data_source.smiles_column)
-    qsar_dataset = QSARDataset(descriptors, activity=clean_df, metadata=clean_df)
+    java_bridge = JavaCDKBridge()
+    java_bridge.start_cdk_java_bridge()
+    java_gateway = java_bridge.gateway
+
+    cdk_utils = CDKUtils(java_gateway)
+    descriptors_df = cdk_utils.calculate_descriptors(clean_df, data_source.smiles_column)
+
+    # Remove empty columns
+    num_columns = descriptors_dataset.shape[0]
+    is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == num_columns
+    descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
+    import ipdb; ipdb.set_trace()
+    qsar_dataset = QSARDataset(descriptors_df=descriptors_df,
+                               activity=clean_df[data_source.activity_column],
+                               metadata=clean_df)
     return qsar_dataset
 
 
@@ -90,7 +100,7 @@ class Preprocessing:
 
         bioactivities_df = data_source.bioactivities_df.copy()
 
-        if type(data_source) is ChEMBLApiDataSource:
+        if ((type(data_source) is ChEMBLApiDataSource) or (type(data_source) is ChEMBLFileDataSource)):
             # Perform initial filter on bioactivities
             bioactivities_df = self._default_filter_chembl(bioactivities_df)
         else:
@@ -105,6 +115,8 @@ class Preprocessing:
         merged_df = merged_df[~merged_df['mark_to_remove']]
         clean_df = merged_df.groupby(data_source.compound_id_column).head(1)
 
+        # Set ID as DataFrame index
+        clean_df.set_index(data_source.compound_id_column, inplace=True)
         return clean_df
 
 
@@ -129,6 +141,10 @@ class DataSource():
     def get_qsar_dataset(self):
         raise NotImplementedError()
 
+    def get_qsar_dataset(self):
+        """Preprocess and transform bioactivities into a QSARDataset object"""
+        return build_qsar_dataset(self)
+
 
 class ChEMBLApiDataSource(DataSource):
     """
@@ -140,7 +156,10 @@ class ChEMBLApiDataSource(DataSource):
             chembl202_dataset = chembl_data_source.get_qsar_dataset()
     """
 
-    def __init__(self, target_id, standard_types):
+    def __init__(self, target_id, standard_types,
+                 smiles_column='canonical_smiles',
+                 compound_id_column='parent_molecule_chembl_id',
+                 activity_column='pchembl_value'):
         """
         Stores a DataFrame containing the bioactivities listed on ChEMBL for specified target.
         Bioactivities can later be converted to a QSARDataset using function `get_qsar_dataset`
@@ -198,16 +217,12 @@ class ChEMBLApiDataSource(DataSource):
 
         self.bioactivities_df = bioactivities_df
 
-        self.smiles_column = 'canonical_smiles'
-        self.compound_id_column = 'parent_molecule_chembl_id'
-        self.activity_column = 'pchembl_value'
+        self.smiles_column = smiles_column
+        self.compound_id_column = compound_id_column
+        self.activity_column = activity_column
 
     def save_bioactivities(self, xls_filename):
         self.bioactivities_df.to_excel(xls_filename, index=False)
-
-    def get_qsar_dataset(self):
-        """Preprocess and transform bioactivities into a QSARDataset object"""
-        return build_qsar_dataset(self)
 
     def __str__(self):
         return self.__repr__()
@@ -219,3 +234,29 @@ class ChEMBLApiDataSource(DataSource):
             + "\n  bioactivities: %d" % self.bioactivities_df.shape[0] \
             + "\n  standard_types: " + str(self.bioactivities_df['standard_type'].unique())
         return repr_str
+
+
+class ChEMBLFileDataSource(DataSource):
+    """
+        Read a file data source downloaded from ChEMBL
+
+        Example of use:
+
+            chembl_data_source = ChEMBLFileDataSource(filepath='./chembl202.xlsx', target_id='CHEMBL202')
+            chembl202_dataset = chembl_data_source.get_qsar_dataset()
+    """
+
+    def __init__(self, filepath, target_id,
+                 smiles_column='canonical_smiles',
+                 compound_id_column='parent_molecule_chembl_id',
+                 activity_column='pchembl_value'):
+
+        if filepath.endswith('.csv'):
+            self.bioactivities_df = pd.read_csv(filepath)
+        else:
+            self.bioactivities_df = pd.read_excel(filepath)
+
+        self.target_id = target_id
+        self.smiles_column = smiles_column
+        self.compound_id_column = compound_id_column
+        self.activity_column = activity_column

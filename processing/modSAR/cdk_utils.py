@@ -75,45 +75,49 @@ class JavaCDKBridge:
         self.is_server_running = False
 
 
-class CDKDescriptors:
+class CDKUtils:
 
-    #TODO: Test this class, fix problems
-
-    def __init__(self):
-        java_cdk_bridge = JavaCDKBridge()
-        java_cdk_bridge.start_cdk_java_bridge()
-
-        gateway = java_cdk_bridge.gateway
-        cdk = gateway.jvm.org.openscience.cdk
-
-        builder = cdk.DefaultChemObjectBuilder.getInstance()
-        self.smiles_parser = cdk.smiles.SmilesParser(builder)
-
+    def __init__(self, java_gateway):
+        self.cdk = java_gateway.jvm.org.openscience.cdk
+        self.builder = self.cdk.DefaultChemObjectBuilder.getInstance()
+        self.smiles_parser = self.cdk.smiles.SmilesParser(self.builder)
         self.descriptors_list = self._get_descriptors_list()
 
     def _get_descriptors_list(self, descriptor_file='modSAR/descriptors_list.csv'):
         descriptors_list = pd.read_csv(descriptor_file)
 
         def remove_prefix(java_class_name):
-            return java_class_name.replace('org.openscience.', '') + '()'
+            return java_class_name.replace('org.openscience.cdk', 'self.cdk') + '()'
 
         descriptors_list['object_invocation'] = descriptors_list['descriptorClass'].apply(remove_prefix)
         return descriptors_list
 
-    def calculate(self, data, smiles_column):
-        mol_container = self.smiles_parser.parseSmiles(data[smiles_column])
-        dict_descriptors = {}
-        for i in range(descriptors_df.shape[0]):
-            descriptor = eval(descriptors_df.iloc[i]['object_invocation'])
-            descriptor.initialise(builder)
-            descriptor_names = [desc_name for desc_name in descriptor.getDescriptorNames()]
-            try:
-                descriptor_values = descriptor.calculate(mol_container).getValue().toString().split(',')
-            except Exception as e:
-                print(e)
+    def get_descriptor_values(self, mol, descriptor):
+        descriptor_names = [desc_name for desc_name in descriptor.getDescriptorNames()]
+        descriptor_vals = descriptor.calculate(mol).getValue().toString().split(',')
+        desc_values = pd.Series({descriptor_names[j]: descriptor_vals[j]
+                                 for j in range(len(descriptor_names))})
+        return desc_values
 
-            dict_descriptors.update({descriptor_names[j]: descriptor_values[j]
-                                     for j in range(len(descriptor_names))})
+    def calculate_descriptors(self, df, smiles_column):
+        """
+        Calculate all descriptors for each entry in the DataFrame
 
-        result_df = pd.DataFrame(dict_descriptors, index=[data['parent_molecule_chembl_id']])
-        return result_df
+        Args:
+            df (DataFrame):      Bioactivities DataFrame
+            smiles_column (str): DataFrame column that contains SMILES
+        """
+
+        cdk_molecules = df[smiles_column].apply(lambda smiles: self.smiles_parser.parseSmiles(smiles))
+
+        num_descriptor_classes = len(self.descriptors_list)
+        descriptor_values = []
+        for i, descriptor_invocation in enumerate(self.descriptors_list['object_invocation']):
+            descriptor = eval(descriptor_invocation)
+            descriptor.initialise(self.builder)
+
+            print("(%02d/%02d) Collecting descriptors from class %s" %
+                  (i + 1, num_descriptor_classes, descriptor_invocation))
+            values = cdk_molecules.apply(lambda mol: self.get_descriptor_values(mol, descriptor))
+            descriptor_values.append(values)
+        return pd.concat(descriptor_values, axis=1)
