@@ -54,10 +54,10 @@ class JavaCDKBridge:
                 if self.gateway is None:
                     self.gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
             else:
-                print("Compiling CDKBridge")
-                command_str = "javac -cp {}:{}/ /mnt/code/modSAR/java/cdk_bridge.java"
-                command_str = command_str.format(self.py4j_jar_path, self.cdk_jar_path)
-                output = subprocess.run(command_str.split(), check=False, stdout=subprocess.PIPE)
+                # print("Compiling CDKBridge")
+                # command_str = "javac -cp {}:{}/ /mnt/code/modSAR/java/cdk_bridge.java"
+                # command_str = command_str.format(self.py4j_jar_path, self.cdk_jar_path)
+                # output = subprocess.run(command_str.split(), check=False, stdout=subprocess.PIPE)
 
                 print("Starting CDKBridge")
                 command_str = "java -cp {}:{}/:/mnt/code/modSAR/java/ CDKBridge &"
@@ -106,6 +106,8 @@ class CDKUtils:
             df (DataFrame):      Bioactivities DataFrame
             smiles_column (str): DataFrame column that contains SMILES
         """
+
+        # TODO: Calculate descriptors in parallel
 
         cdk_molecules = df[smiles_column].apply(lambda smiles: self.smiles_parser.parseSmiles(smiles))
 

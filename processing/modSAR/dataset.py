@@ -12,7 +12,7 @@ import numpy as np
 import scipy.sparse as sp
 import pandas as pd
 
-from rdkit.DataStructs import cDataStructs
+from .utils import near_zero_variance
 
 
 class Dataset:
@@ -41,7 +41,11 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, name, X, y, filter_invalid=True, metadata=None):
+    def __init__(self, name, X, y, apply_filter=True, metadata=None):
+        if apply_filter:
+            has_near_zero_var = near_zero_variance(X)
+            X = X[~has_near_zero_var].copy()
+            # TODO: findCorrelation
         super().__init__(name, X, y, metadata)
 
         # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
