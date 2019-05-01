@@ -41,16 +41,10 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, name, X, y, metadata=None):
+    def __init__(self, name, X, y, filter_invalid=True, metadata=None):
         super().__init__(name, X, y, metadata)
 
-        # Remove empty columns
-        # num_columns = descriptors_df.shape[0]
-        # is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == num_columns
-        # descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
-
         # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
-        # super().__init__(self.target_id, self.features, activity_column)
 
     def __str__(self):
         return self.__repr__()
