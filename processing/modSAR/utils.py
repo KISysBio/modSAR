@@ -66,6 +66,33 @@ def print_var(var, *args):
                 print()
 
 
+def round_decimal(number, decimal_places=2):
+    decimal_value = Decimal(number)
+    return decimal_value.quantize(Decimal(10) ** -decimal_places)
+
+
+def near_zero_variance(df, freq_cut=95 / 5, unique_cut=10):
+
+    def nzv(series, freq_cut=95 / 5, unique_cut=10):
+        # Round to 5 decimal places to emulate default behaviour in R?
+        unique_values = series.round(5).value_counts()
+
+        if len(unique_values) == 1:
+            # Is Zero Variance
+            return True
+
+        freq_ratio = unique_values.iloc[0] / unique_values.iloc[1]
+        percent_unique = len(unique_values) / series.shape[0]
+
+        return (freq_ratio > freq_cut) and (percent_unique <= unique_cut)
+
+    return df.apply(lambda x: nzv(x, freq_cut, unique_cut))
+
+
+def find_correlation(df):
+    pass
+
+
 def get_similarity_matrix(fingerprints):
     """Calculate the similarity matrix among all fingerprints
 
@@ -103,8 +130,7 @@ def create_graph(adjMatrix, threshold, k=5, is_directed=True, is_weighted=True):
     for n in belowThreshold:
         neighbours = np.flip(np.argsort(adjMatrix.iloc[n].values), axis=0)[0:k]
         for neigh in neighbours:
-            shouldAdd = not g.es.select(_source=n, _target=neigh) and\
-                        (is_directed or (not is_directed and not g.es.select(_source=neigh, _target=n)))
+            shouldAdd = not g.es.select(_source=n, _target=neigh) and (is_directed or (not is_directed and not g.es.select(_source=neigh, _target=n)))
             if shouldAdd:
                 g.add_edge(n, neigh)
                 if is_weighted:
@@ -128,6 +154,6 @@ def create_graph(adjMatrix, threshold, k=5, is_directed=True, is_weighted=True):
     g["threshold"] = threshold
     g["k"] = k
 
-    #g["edgeDensity"] = g.density()
-    #g["metric"] = g["globalClusteringCoefficient"] - 0.4 * g["edgeDensity"]
+    # g["edgeDensity"] = g.density()
+    # g["metric"] = g["globalClusteringCoefficient"] - 0.4 * g["edgeDensity"]
     return g
