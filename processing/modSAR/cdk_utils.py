@@ -1,9 +1,6 @@
-# Parts of this code were adapted from Sebastian Burgstaller-Muehlbacher's cdk_pywrapper
-#  python pkg to make use of CDK in Python:
-#   https://github.com/sebotic/cdk_pywrapper
-
 import os
 import py4j
+import time
 import subprocess
 import pandas as pd
 
@@ -68,6 +65,7 @@ class JavaCDKBridge:
                 subprocess.Popen(command_str.split(), stdout=subprocess.PIPE)
                 self.is_server_running = True
                 self.gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
+        time.sleep(4)
 
     def __del__(self):
         print("Cleaning up JavaGateway")
@@ -76,6 +74,7 @@ class JavaCDKBridge:
 
 
 class CDKUtils:
+    """"""
 
     def __init__(self, java_gateway):
         self.cdk = java_gateway.jvm.org.openscience.cdk

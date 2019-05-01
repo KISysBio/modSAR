@@ -18,15 +18,20 @@ from rdkit.DataStructs import cDataStructs
 class Dataset:
     """Generic class to represent a data set"""
 
-    def __init__(self, dataset_name, data, activity_column):
-        pass
+    def __init__(self, dataset_name, X, y, metadata=None):
+        self.name = dataset_name
+        self.X = X
+        self.y = y
+        self.metadata = metadata
+        self.number_samples = X.shape[0]
+        self.number_features = X.shape[1]
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
         object_str = "Dataset %s \n -- Samples : %d\n -- Features:  %d"
-        return object_str % (self.dataset_name, self.number_samples, self.number_features)
+        return object_str % (self.name, self.number_samples, self.number_features)
 
 
 class QSARDataset(Dataset):
@@ -36,12 +41,13 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, descriptors_df, activity_values, target_id, metadata=None):
-        self.descriptors_df = descriptors_df
-        self.activity = activity
-        self.target_id = target_id
-        self.features = descriptors_df
-        self.metadata = metadata
+    def __init__(self, name, X, y, metadata=None):
+        super().__init__(name, X, y, metadata)
+
+        # Remove empty columns
+        # num_columns = descriptors_df.shape[0]
+        # is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == num_columns
+        # descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
 
         # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
         # super().__init__(self.target_id, self.features, activity_column)
@@ -50,4 +56,4 @@ class QSARDataset(Dataset):
         return self.__repr__()
 
     def __repr__(self):
-        return 'QSAR' + super.__repr__()
+        return 'QSAR' + super().__repr__()

@@ -11,116 +11,14 @@ This module supports representation of functional bioactivies
 import numpy as np
 import pandas as pd
 
-from chembl_webresource_client.new_client import new_client
+from abc import ABCMeta, abstractmethod
 from .utils import print_progress_bar
 from .dataset import QSARDataset
+from .preprocessing import Preprocessing
 from .cdk_utils import JavaCDKBridge, CDKUtils
 
 
-def build_qsar_dataset(data_source):
-
-    def check_valid_data_source(data_source):
-
-        missing_attributes = []
-        if ((data_source.smiles_column is None) or (data_source.smiles_column == '')):
-            missing_attributes.append(['smiles_column'])
-        if (data_source.activity_column is None):
-            missing_attributes.append(['activity_column'])
-        if (data_source.compound_id_column is None):
-            missing_attributes.append(['compound_id_column'])
-
-        if (len(missing_attributes) > 1):
-            raise ValueError('DataSource %s does not have required attributes: %s' %
-                             (data_source, ', '.join(missing_attributes)))
-
-    check_valid_data_source(data_source)
-
-    clean_df = Preprocessing().clean_dataset(data_source)
-    java_bridge = JavaCDKBridge()
-    java_bridge.start_cdk_java_bridge()
-    java_gateway = java_bridge.gateway
-
-    cdk_utils = CDKUtils(java_gateway)
-    descriptors_df = cdk_utils.calculate_descriptors(clean_df, data_source.smiles_column)
-
-    # Remove empty columns
-    num_columns = descriptors_df.shape[0]
-    is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == num_columns
-    descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
-    import ipdb; ipdb.set_trace()
-    qsar_dataset = QSARDataset(descriptors_df=descriptors_df,
-                               activity=clean_df[data_source.activity_column],
-                               metadata=clean_df)
-    return qsar_dataset
-
-
-class Preprocessing:
-    """Preprocess data obtained via a DataSource (.csv, .xls file or ChEMBL)
-
-    The bioactivity data is filtered, duplicated and invalid entries are handled and
-      molecular descriptors are calculated.
-    """
-
-    def __init__(self, activity_column='median_activity_value'):
-        self.activity_column = activity_column
-
-    def _mark_to_remove(self, data, activity_column):
-        """Mark data for removal if standard deviation of duplicated entries is above 1"""
-
-        activity_value = data[activity_column].astype(float)
-        std_deviation = np.std(activity_value)
-        number_compounds = data.shape[0]
-
-        # It is duplicated
-        result_df = pd.Series(
-            {'number_compounds': number_compounds,
-             'standard_deviation': std_deviation,
-             self.activity_column: np.median(activity_value),
-             'duplicated': number_compounds > 1,
-             'mark_to_remove': std_deviation > 1})
-        return result_df
-
-    def _default_filter_chembl(self, bioactivities_df):
-        """Default filter for data downloaded from ChEMBL"""
-
-        # Relation measured must be of type equality
-        valid_rows = bioactivities_df['relation'] == '='
-        bioactivities_df = bioactivities_df[valid_rows]
-
-        # Remove data that is marked as potential invalid
-        valid_rows = bioactivities_df['data_validity_comment'].isnull()
-        bioactivities_df = bioactivities_df[valid_rows]
-
-        # There must be a valid pCHEMBL value
-        valid_rows = ~bioactivities_df['pchembl_value'].isnull()
-        bioactivities_df = bioactivities_df[valid_rows]
-        return bioactivities_df
-
-    def clean_dataset(self, data_source):
-
-        bioactivities_df = data_source.bioactivities_df.copy()
-
-        if ((type(data_source) is ChEMBLApiDataSource) or (type(data_source) is ChEMBLFileDataSource)):
-            # Perform initial filter on bioactivities
-            bioactivities_df = self._default_filter_chembl(bioactivities_df)
-        else:
-            raise ValueError("Data source not recognized: %s" % type(data_source))
-
-        # Mark duplicated entries for removeal
-        grouped_dataset = bioactivities_df.groupby(data_source.compound_id_column)
-        grouped_dataset = grouped_dataset.apply(lambda x: self._mark_to_remove(x, data_source.activity_column))
-
-        # The resulting dataset, clean_df, does not contain duplicated entries
-        merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index())
-        merged_df = merged_df[~merged_df['mark_to_remove']]
-        clean_df = merged_df.groupby(data_source.compound_id_column).head(1)
-
-        # Set ID as DataFrame index
-        clean_df.set_index(data_source.compound_id_column, inplace=True)
-        return clean_df
-
-
-class DataSource():
+class DataSource(metaclass=ABCMeta):
     """
     Represent a data source
 
@@ -138,12 +36,66 @@ class DataSource():
 
     """
 
-    def get_qsar_dataset(self):
-        raise NotImplementedError()
+    def __init__(self, target_id, smiles_column, compound_id_column, activity_column,
+                 is_chembl_data, **kwargs):
+        """
+        Generic DataSource construtor
 
-    def get_qsar_dataset(self):
-        """Preprocess and transform bioactivities into a QSARDataset object"""
-        return build_qsar_dataset(self)
+        Args:
+            target_id (str): name of the protein target common to all activities in the dataset
+            smiles_column (str): name of column that contains SMILES code for the compounds
+            compound_id_column (str): column in the DataFrame that identifies the compound
+            activity_column (str): column in the DataFrame
+        """
+        missing_attributes = []
+        if ((smiles_column is None) or (smiles_column == '')):
+            missing_attributes.append(['smiles_column'])
+        if (activity_column is None):
+            missing_attributes.append(['activity_column'])
+        if (compound_id_column is None):
+            missing_attributes.append(['compound_id_column'])
+        if (is_chembl_data is None):
+            missing_attributes.append(['is_chembl_data'])
+
+        if (len(missing_attributes) > 1):
+            raise ValueError('DataSource does not have required attributes: %s' %
+                             (', '.join(missing_attributes)))
+
+        self.target_id = target_id
+        self.smiles_column = smiles_column
+        self.compound_id_column = compound_id_column
+        self.activity_column = activity_column
+        self.is_chembl_data = is_chembl_data
+        for attr, val in kwargs.items():
+            setattr(self, attr, val)
+
+        self.bioactivities_df = self._get_bioactivities_df()
+
+    @abstractmethod
+    def _get_bioactivities_df(self):
+        pass
+
+    def build_qsar_dataset(self):
+        """
+        Preprocess bioactivities and builds a QSARDataset object
+        """
+
+        preprocess = Preprocessing(compound_id_column=self.compound_id_column,
+                                   activity_column=self.activity_column,
+                                   apply_chembl_filter=self.is_chembl_data,
+                                   remove_duplicated=True)
+        clean_df = preprocess.do(self.bioactivities_df)
+        java_bridge = JavaCDKBridge()
+        java_bridge.start_cdk_java_bridge()
+        java_gateway = java_bridge.gateway
+
+        cdk_utils = CDKUtils(java_gateway)
+        descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
+        qsar_dataset = QSARDataset(name=self.target_id,
+                                   X=descriptors_df,
+                                   y=clean_df[self.activity_column],
+                                   metadata=clean_df)
+        return qsar_dataset
 
 
 class ChEMBLApiDataSource(DataSource):
@@ -159,7 +111,8 @@ class ChEMBLApiDataSource(DataSource):
     def __init__(self, target_id, standard_types,
                  smiles_column='canonical_smiles',
                  compound_id_column='parent_molecule_chembl_id',
-                 activity_column='pchembl_value'):
+                 activity_column='pchembl_value',
+                 apply_filter=True):
         """
         Stores a DataFrame containing the bioactivities listed on ChEMBL for specified target.
         Bioactivities can later be converted to a QSARDataset using function `get_qsar_dataset`
@@ -169,25 +122,30 @@ class ChEMBLApiDataSource(DataSource):
             standard_types (str or list): e.g.: IC50, Ki, etc.
 
         """
-
-        self.target_id = target_id
+        import chembl_webresource_client.new_client as chemblapi
         if type(standard_types) is str:
-            self.standard_types = [standard_types]
-        else:
-            self.standard_types = standard_types
+            standard_types = [standard_types]
+        super(ChEMBLApiDataSource, self).__init__(target_id,
+                                                  smiles_column=smiles_column,
+                                                  compound_id_column=compound_id_column,
+                                                  activity_column=activity_column,
+                                                  is_chembl_data=True,
+                                                  standard_types=standard_types)
 
-        activity = new_client.activity
-        result = activity.filter(target_chembl_id=target_id, assay_type__iregex='(B|F)')
+    def _get_bioactivities_df(self):
+        activity = chemblapi.new_client.activity
+        result = activity.filter(target_chembl_id=self.target_id,
+                                 assay_type__iregex='(B|F)')
 
-        def get_compound_df(idx, compound_dict):
+        def get_compound_df(idx, compound_dict, standard_types):
             """Filter compounds by the standard_types informed, returning a DataFrame"""
 
-            if self.standard_types is None or compound_dict['standard_type'] is None:
+            if standard_types is None or compound_dict['standard_type'] is None:
                 is_valid_std_type = False
             else:
                 compound_std_type = compound_dict['standard_type'].lower()
                 is_valid_std_type = any([std_type.lower() in compound_std_type
-                                         for std_type in self.standard_types])
+                                         for std_type in standard_types])
 
             if is_valid_std_type:
                 # Drop unused columns
@@ -211,15 +169,11 @@ class ChEMBLApiDataSource(DataSource):
         self.number_retrieved_compounds = len(result)
         print_progress_bar(0, self.number_retrieved_compounds,
                            prefix='Progress:', suffix='Complete', length=50)
-        bioactivities_df = [get_compound_df(idx, compound_dict)
+        bioactivities_df = [get_compound_df(idx, compound_dict, self.standard_types)
                             for idx, compound_dict in enumerate(result)]
         bioactivities_df = pd.concat(bioactivities_df, sort=False).reset_index(drop=True)
 
-        self.bioactivities_df = bioactivities_df
-
-        self.smiles_column = smiles_column
-        self.compound_id_column = compound_id_column
-        self.activity_column = activity_column
+        return bioactivities_df
 
     def save_bioactivities(self, xls_filename):
         self.bioactivities_df.to_excel(xls_filename, index=False)
@@ -236,9 +190,9 @@ class ChEMBLApiDataSource(DataSource):
         return repr_str
 
 
-class ChEMBLFileDataSource(DataSource):
+class GenericFileDataSource(DataSource):
     """
-        Read a file data source downloaded from ChEMBL
+        Read a file data source downloaded from ChEMBL (CSV or XLSX)
 
         Example of use:
 
@@ -246,17 +200,47 @@ class ChEMBLFileDataSource(DataSource):
             chembl202_dataset = chembl_data_source.get_qsar_dataset()
     """
 
-    def __init__(self, filepath, target_id,
+    def __init__(self, target_id, filepath, smiles_column, compound_id_column, activity_column,
+                 is_chembl_data=False, apply_filter=False):
+        super().__init__(target_id,
+                         smiles_column=smiles_column,
+                         compound_id_column=compound_id_column,
+                         activity_column=activity_column,
+                         is_chembl_data=is_chembl_data,
+                         filepath=filepath)
+
+    def _get_bioactivities_df(self):
+        if self.filepath.endswith('.csv'):
+            return pd.read_csv(self.filepath)
+        else:
+            return pd.read_excel(self.filepath)
+
+
+class ChEMBLFileDataSource(DataSource):
+    """
+        Read a file data source downloaded from ChEMBL (CSV or XLSX)
+
+        Example of use:
+
+            chembl_data_source = ChEMBLFileDataSource(filepath='./chembl202.xlsx', target_id='CHEMBL202')
+            chembl202_dataset = chembl_data_source.get_qsar_dataset()
+    """
+
+    def __init__(self, target_id, filepath,
                  smiles_column='canonical_smiles',
                  compound_id_column='parent_molecule_chembl_id',
-                 activity_column='pchembl_value'):
+                 activity_column='pchembl_value',
+                 is_chembl_data=True,
+                 apply_filter=True):
+        super().__init__(target_id,
+                         smiles_column=smiles_column,
+                         compound_id_column=compound_id_column,
+                         activity_column=activity_column,
+                         is_chembl_data=is_chembl_data,
+                         filepath=filepath)
 
-        if filepath.endswith('.csv'):
-            self.bioactivities_df = pd.read_csv(filepath)
+    def _get_bioactivities_df(self):
+        if self.filepath.endswith('.csv'):
+            return pd.read_csv(self.filepath)
         else:
-            self.bioactivities_df = pd.read_excel(filepath)
-
-        self.target_id = target_id
-        self.smiles_column = smiles_column
-        self.compound_id_column = compound_id_column
-        self.activity_column = activity_column
+            return pd.read_excel(self.filepath)
