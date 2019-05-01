@@ -119,4 +119,12 @@ class CDKUtils:
                   (i + 1, num_descriptor_classes, descriptor_invocation))
             values = cdk_molecules.apply(lambda mol: self.get_descriptor_values(mol, descriptor))
             descriptor_values.append(values)
-        return pd.concat(descriptor_values, axis=1)
+        descriptors_df = pd.concat(descriptor_values, axis=1)
+
+        # Remove empty columns
+        is_empty_column = descriptors_df.apply(lambda x: sum(x == 'NaN'), axis=0) == descriptors_df.shape[0]
+        descriptors_df = descriptors_df.loc[:, ~is_empty_column].copy()
+
+        for col in descriptors_df.columns:
+            descriptors_df[col] = descriptors_df[col].astype(float)
+        return descriptors_df
