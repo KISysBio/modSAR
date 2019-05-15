@@ -72,6 +72,10 @@ def round_decimal(number, decimal_places=2):
 
 
 def near_zero_variance(df, freq_cut=95 / 5, unique_cut=10):
+    """Closely follows caret::nearZeroVar implementation
+
+    https://rdrr.io/cran/caret/src/R/nearZeroVar.R
+    """
 
     def nzv(series, freq_cut=95 / 5, unique_cut=10):
         # Round to 5 decimal places to emulate default behaviour in R?
@@ -89,8 +93,56 @@ def near_zero_variance(df, freq_cut=95 / 5, unique_cut=10):
     return df.apply(lambda x: nzv(x, freq_cut, unique_cut))
 
 
-def find_correlation(df):
-    pass
+def find_correlation_exact(df, cutoff=0.9):
+    """Closely follows caret::findCorrelation_fast implementation
+
+    https://rdrr.io/cran/caret/src/R/findCorrelation.R
+    """
+    mat = df.corr()
+
+    # Reorder correlation matrix per average correlation mean
+    correlation_order = mat.abs().mean().sort_values(ascending=False).index
+    mat = mat.loc[correlation_order, correlation_order]
+
+    # Auxiliar correlation matrix: mat2. Diagonals are set to None
+    mat2 = mat.copy()
+    for i in range(len(correlation_order)):
+        mat2.iloc[i, i] = None
+
+    n_cols = len(correlation_order)
+    total_comparisons = n_cols * (n_cols - 1)
+
+    cols_to_remove = []
+    count = 0
+    for i in range(0, n_cols - 1):
+        print_progress_bar(count, total_comparisons)
+        if mat2.isnull().all().all():
+            break
+        if i in cols_to_remove:
+            count += n_cols
+            continue
+
+        i_col = mat.columns[i]
+        for j in range(i + 1, n_cols):
+            count += 1
+            print_progress_bar(count, total_comparisons)
+            if j not in cols_to_remove:
+                if mat.iloc[i, j] > cutoff:
+                    j_col = mat.columns[j]
+
+                    mn1 = mat2.loc[i_col].mean()
+                    mn2 = mat2.drop(j_col).drop(columns=j_col).mean().mean()  # TODO: Make sure this is corret
+
+                    if mn1 > mn2:
+                        cols_to_remove.append(i_col)
+                        mat2.at[i_col, :] = None
+                        mat2[[i_col]] = None
+                    else:
+                        cols_to_remove.append(j_col)
+                        mat2.at[j_col, :] = None
+                        mat2[[j_col]] = None
+
+    return cols_to_remove
 
 
 def get_similarity_matrix(fingerprints):
