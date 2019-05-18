@@ -8,6 +8,7 @@ This module supports representation of functional bioactivies
 
 """
 
+import chembl_webresource_client
 import numpy as np
 import pandas as pd
 
@@ -31,8 +32,8 @@ class DataSource(metaclass=ABCMeta):
           The first represent the Canonical Smiles of a compound while the second correspond
             to the acitivity of the compounds.
 
-        DataSource parses the data and creates an object of the class modSAR.qsar.QSARDataset
-          using the function `get_qsar_dataset`.
+        DataSource parses the data and creates an object of the class modSAR.dataset.QSARDataset
+          using the function `build_qsar_dataset`.
 
     """
 
@@ -122,7 +123,6 @@ class ChEMBLApiDataSource(DataSource):
             standard_types (str or list): e.g.: IC50, Ki, etc.
 
         """
-        import chembl_webresource_client.new_client as chemblapi
         if type(standard_types) is str:
             standard_types = [standard_types]
         super(ChEMBLApiDataSource, self).__init__(target_id,
@@ -133,7 +133,7 @@ class ChEMBLApiDataSource(DataSource):
                                                   standard_types=standard_types)
 
     def _get_bioactivities_df(self):
-        activity = chemblapi.new_client.activity
+        activity = chembl_webresource_client.new_client.new_client.activity
         result = activity.filter(target_chembl_id=self.target_id,
                                  assay_type__iregex='(B|F)')
 

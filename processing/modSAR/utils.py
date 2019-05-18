@@ -93,7 +93,7 @@ def near_zero_variance(df, freq_cut=95 / 5, unique_cut=10):
     return df.apply(lambda x: nzv(x, freq_cut, unique_cut))
 
 
-def find_correlation_exact(df, cutoff=0.9):
+def find_correlation_exact(df, cutoff=0.9, verbose=False):
     """Closely follows caret::findCorrelation_fast implementation
 
     https://rdrr.io/cran/caret/src/R/findCorrelation.R
@@ -102,43 +102,48 @@ def find_correlation_exact(df, cutoff=0.9):
 
     # Reorder correlation matrix per average correlation mean
     correlation_order = mat.abs().mean().sort_values(ascending=False).index
-    mat = mat.loc[correlation_order, correlation_order]
 
     # Auxiliar correlation matrix: mat2. Diagonals are set to None
     mat2 = mat.copy()
-    for i in range(len(correlation_order)):
-        mat2.iloc[i, i] = None
+    for i in correlation_order:
+        mat2.loc[i, i] = None
 
     n_cols = len(correlation_order)
     total_comparisons = n_cols * (n_cols - 1)
 
-    cols_to_remove = []
+    cols_to_remove = pd.Series([False] * n_cols, index=correlation_order)
     count = 0
-    for i in range(0, n_cols - 1):
+    for i, i_col in enumerate(correlation_order):
         print_progress_bar(count, total_comparisons)
         if mat2.isnull().all().all():
             break
-        if i in cols_to_remove:
+        if cols_to_remove[i_col]:
             count += n_cols
             continue
-
-        i_col = mat.columns[i]
-        for j in range(i + 1, n_cols):
+        for j, j_col in enumerate(correlation_order):
+            if j <= i:
+                continue
             count += 1
             print_progress_bar(count, total_comparisons)
-            if j not in cols_to_remove:
-                if mat.iloc[i, j] > cutoff:
-                    j_col = mat.columns[j]
-
+            if not (cols_to_remove[i_col] or cols_to_remove[j_col]):
+                if mat.loc[i_col, j_col] > cutoff:
+                    # Remove column with largest mean absolute correlation
                     mn1 = mat2.loc[i_col].mean()
-                    mn2 = mat2.drop(j_col).drop(columns=j_col).mean().mean()  # TODO: Make sure this is corret
+                    mn2 = mat2.loc[j_col].mean()
+                    if verbose:
+                        print("-- MN1 (i=%s) : %.3f" % (i_col, mn1))
+                        print("-- MN2 (j=%s) : %.3f" % (j_col, mn2))
 
                     if mn1 > mn2:
-                        cols_to_remove.append(i_col)
+                        if verbose:
+                            print("-- Removing %s" % (i_col))
+                        cols_to_remove.loc[i_col] = True
                         mat2.at[i_col, :] = None
                         mat2[[i_col]] = None
                     else:
-                        cols_to_remove.append(j_col)
+                        if verbose:
+                            print("-- Removing %s" % (j_col))
+                        cols_to_remove.loc[j_col] = True
                         mat2.at[j_col, :] = None
                         mat2[[j_col]] = None
 
