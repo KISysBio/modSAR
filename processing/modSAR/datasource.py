@@ -16,7 +16,7 @@ from abc import ABCMeta, abstractmethod
 from .utils import print_progress_bar
 from .dataset import QSARDataset
 from .preprocessing import Preprocessing
-from .cdk_utils import JavaCDKBridge, CDKUtils
+from .cdk_utils import CDKUtils
 
 
 class DataSource(metaclass=ABCMeta):
@@ -86,11 +86,8 @@ class DataSource(metaclass=ABCMeta):
                                    apply_chembl_filter=self.is_chembl_data,
                                    remove_duplicated=True)
         clean_df = preprocess.do(self.bioactivities_df)
-        java_bridge = JavaCDKBridge()
-        java_bridge.start_cdk_java_bridge()
-        java_gateway = java_bridge.gateway
 
-        cdk_utils = CDKUtils(java_gateway)
+        cdk_utils = CDKUtils()
         descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
         qsar_dataset = QSARDataset(name=self.target_id,
                                    X=descriptors_df,
