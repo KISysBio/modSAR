@@ -2,6 +2,8 @@ import os
 import py4j
 import time
 import subprocess
+
+import numpy as np
 import pandas as pd
 
 from py4j.java_gateway import JavaGateway, GatewayParameters
@@ -133,3 +135,31 @@ class CDKUtils:
         for col in descriptors_df.columns:
             descriptors_df[col] = descriptors_df[col].astype(float)
         return descriptors_df
+
+    def calculate_fingerprint(smiles, circular_type=3):
+        fingerprinter = cdk.fingerprint.CircularFingerprinter(circular_type)
+        mol = self.smiles_parser.parseSmiles(smiles)
+        return fingerprinter.getBitFingerprint(mol)
+
+    def calculate_pairwise_tanimoto(df, smiles_column, circular_type=3):
+        """
+
+        Args:
+            circular_type (int): Type of circular fingerprint.
+                ECFP0 = 1, ECFP2 = 2, ECFP4 = 3, ECFP6 = 4,
+                FCFP0 = 5, FCFP2 = 6, FCFP4 = 7, FCFP6 = 8
+        """
+        fps = df[smiles_column].apply(lambda x: calculate_fingerprint(x, circular_type))
+
+        matrix = np.zeros((len(fps), len(fps)), dtype="f8")
+        for i, fp1 in enumerate(fps):
+            for j, fp2 in enumerate(fps):
+                if j < i:
+                    continue
+                elif j == i:
+                    matrix[i, j] = 0
+                else:
+                    sim = self.cdk.similarity.Tanimoto.calculate(fp1, fp2)
+                    matrix[i, j] = sim
+                    matrix[j, i] = sim
+        return matrix
