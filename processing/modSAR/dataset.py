@@ -12,7 +12,7 @@ import numpy as np
 import scipy.sparse as sp
 import pandas as pd
 
-from .utils import near_zero_variance, find_correlation_exact
+from .features import apply_feature_filter
 
 
 class Dataset:
@@ -41,15 +41,18 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, name, X, y, apply_filter=True, metadata=None):
+    def __init__(self, name, X, y, smiles, apply_filter=True, metadata=None):
         if apply_filter:
-            import ipdb; ipdb.set_trace()
-            cols_to_remove = near_zero_variance(X)
-            X = X.loc[:, ~cols_to_remove].copy()
-
-            cols_to_remove = find_correlation_exact(X)
-            X = X.loc[:, ~cols_to_remove].copy()
+            X = apply_feature_filter(X)
         super().__init__(name, X, y, metadata)
+
+        self.fingerprints = self._calculate_fingerprints(smiles)
+
+    def _calculate_fingerprints(self, smiles):
+        cdk_utils = CDKUtils()
+
+
+
 
         # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
 
