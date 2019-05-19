@@ -1,9 +1,9 @@
+import igraph as ig
 import numpy as np
 import pandas as pd
 import oplrareg
 
 from sklearn.tree import export_graphviz
-from .utils import create_graph, get_similarity_matrix
 from collections import Counter
 
 
@@ -28,7 +28,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.instance_graph = None
         self.decision_tree = None
 
-    def fit(self, X, y, fingerprint, threshold=None, k=0):
+    def fit(self, X, y, pairwise_similarity, threshold=None, k=0):
         """Fits a modSAR model to the input data
 
         Args:
@@ -43,12 +43,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         if X.shape[0] != len(y):
             raise ValueError("Data and target values have different dimensions.")
 
-        if X.shape[0] != fingerprint.shape[0]:
-            raise ValueError("Molecular descriptors and fingerprint DataFrames have different dimensions")
-
         print(self)
-        self.fingerprints = fingerprint
-        adjMatrix = get_similarity_matrix(fingerprint)
 
         if k != 0:
             is_weighted = True
@@ -62,7 +57,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             bestClusteringCoefficient = None
             bestG = None
             for threshold in [t / 100.0 for t in range(20, 40)]:
-                g = create_graph(adjMatrix, threshold, k, is_directed=False, is_weighted=is_weighted)
+                g = self.create_graph(pairwise_similarity, threshold, k, is_directed=False, is_weighted=is_weighted)
                 if bestThreshold is None or g["globalClusteringCoefficient"] > bestClusteringCoefficient:
                     bestG = g
                     bestThreshold = threshold
@@ -71,7 +66,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             threshold = bestThreshold
             print("Best Threshold = %.2f | ACC = %.3f" % (bestThreshold, bestClusteringCoefficient))
         else:
-            g = create_graph(adjMatrix, threshold, k, is_directed=False, is_weighted=is_weighted)
+            g = create_graph(pairwise_similarity, threshold, k, is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
         self.k = k
@@ -113,105 +108,149 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.class_names = list(set(communities))
         self.feature_names = X.columns
 
+    def create_graph(self, adjMatrix, threshold, k=5, is_directed=True, is_weighted=True):
 
-def classify_samples(self, g, similarityMatrix):
-    """
-    Classify samples according to their neighbourhood in the graph
+        thresholdMat = (adjMatrix >= threshold) * adjMatrix
+        thresholdMat = thresholdMat.tolist()
 
-    :param g: graph obtained during training (fit)
-    :param similarityMatrix: n x m matrix of similarity between the n samples to be classified and m nodes in graph g
-    :param majority: should a sample be assigned to the module where most of its connections are? (majority = True) *default
-        or should it be assigned to the module where the average similarity is higher? (majority = False)
-    :return:
-    """
+        g = ig.Graph.Weighted_Adjacency(thresholdMat, loops=False)
 
-    samples = range(similarityMatrix.shape[0])
-    thresholdMat = (similarityMatrix >= self.threshold) * similarityMatrix
-    noNeighbours = thresholdMat.astype(bool).sum(axis=1)
-    instanceModules = np.array(g.vs["community"])
-    classes = np.empty(len(samples), dtype="<U8")
-    for s in samples:
-        if noNeighbours[s] <= 1:
-            if self.k == 0:
-                neighbours = similarityMatrix.iloc[s, :].values.argmax()
+        if not is_directed:
+            if is_weighted:
+                w = g.es["weight"]
+                g.to_undirected()
+                g.es["weight"] = w
             else:
-                neighbours = similarityMatrix.iloc[s, :].values.argsort()[(len(samples) - self.k):]
+                g.to_undirected()
+
+        belowThreshold = [i for i, s in enumerate(g.strength(mode=1)) if s < k]
+        edgeId = len(g.es())
+
+        for n in belowThreshold:
+            neighbours = np.flip(np.argsort(adjMatrix.iloc[n].values), axis=0)[0:k]
+            for neigh in neighbours:
+                shouldAdd = not g.es.select(_source=n, _target=neigh) and (is_directed or (not is_directed and not g.es.select(_source=neigh, _target=n)))
+                if shouldAdd:
+                    g.add_edge(n, neigh)
+                    if is_weighted:
+                        g.es[edgeId]["weight"] = adjMatrix.iloc[n, neigh]
+                    edgeId += 1
+            g.vs[n]["usedKnn"] = True
+
+        g.vs["degree"] = g.degree()
+
+        if is_weighted:
+            g["globalClusteringCoefficient"] = g.transitivity_avglocal_undirected(weights="weight", mode="zero")
         else:
-            neighbours = np.argwhere(thresholdMat.iloc[s, :] > 0).flatten()
+            g["globalClusteringCoefficient"] = g.transitivity_avglocal_undirected(mode="zero")
 
-        counterNeigh = Counter(instanceModules[neighbours])
-
-        # Maximum number of links to a module
-        maxLinks = counterNeigh.most_common(1)[0][1]
-        maxModules = [k for k, v in counterNeigh.items() if v == maxLinks]
-
-        if len(maxModules) == 1:
-            classes[s] = maxModules[0]
+        if is_weighted:
+            vc = g.community_multilevel(weights='weight')
         else:
-            modulesDist = {comm: np.average(similarityMatrix.iloc[s, np.argwhere(instanceModules == comm).flatten()])
-                           for comm in maxModules}
-            classes[s] = max(modulesDist, key=lambda x: modulesDist[x])
-    return classes
+            vc = g.community_multilevel()
+        g.vs["louvain"] = ['m%02d' % (x + 1) for x in vc.membership]
+        g["threshold"] = threshold
+        g["k"] = k
 
+        # g["edgeDensity"] = g.density()
+        # g["metric"] = g["globalClusteringCoefficient"] - 0.4 * g["edgeDensity"]
+        return g
 
-def predict(self, X, fingerprints):
-    samples = range(X.shape[0])
+    def classify_samples(self, g, similarityMatrix):
+        """
+        Classify samples according to their neighbourhood in the graph
 
-    similarity_matrix = get_asym_similarity_matrix(fingerprints, self.fingerprints)
+        :param g: graph obtained during training (fit)
+        :param similarityMatrix: n x m matrix of similarity between the n samples to be classified and m nodes in graph g
+        :param majority: should a sample be assigned to the module where most of its connections are? (majority = True) *default
+            or should it be assigned to the module where the average similarity is higher? (majority = False)
+        :return:
+        """
 
-    classes = self.classify_samples(self.instance_graph, similarity_matrix)
-
-    counter_classes = Counter(classes)
-    final_predictions = np.zeros(len(samples))
-
-    for comm, count in counter_classes.items():
-        samples_in_community = np.argwhere(classes == comm).transpose()[0]
-        final_predictions[samples_in_community] = self.models[comm].predict(X.iloc[samples_in_community])
-
-    return final_predictions
-
-
-def print_decision_tree(self, generatePDF=True, filename="decision_tree.dot"):
-    treeData = export_graphviz(self.decision_tree, out_file=None, feature_names=self.feature_names, label="root",
-                               class_names=self.class_names, filled=True, rounded=True, special_characters=True,
-                               impurity=True)
-    if(generatePDF):
-        import pydotplus
-        graph = pydotplus.graph_from_dot_data(treeData)
-        graph.write_pdf("decision_tree.pdf")
-    else:
-        with open(filename, 'w') as f:
-            f.write(treeData)
-
-
-def print_R_rules(self, filename):
-    f = open(filename, "w")
-
-    leafNodes = [l for l, v in enumerate(self.decision_tree.tree_.feature) if v == -2]
-    tree_ = self.decision_tree.tree_
-
-    def recurse(i, depth):
-        indent = "  " * depth
-        if i not in leafNodes:
-            f.write("%sifelse(descriptors$%s <= %0.4f," %
-                    (indent, self.feature_names[tree_.feature[i]], tree_.threshold[i]))
-            if tree_.children_left[i] not in leafNodes:
-                f.write("\n")
-            recurse(tree_.children_left[i], depth + 1)
-            if tree_.children_right[i] not in leafNodes:
-                f.write(",\n")
+        samples = range(similarityMatrix.shape[0])
+        thresholdMat = (similarityMatrix >= self.threshold) * similarityMatrix
+        noNeighbours = thresholdMat.astype(bool).sum(axis=1)
+        instanceModules = np.array(g.vs["community"])
+        classes = np.empty(len(samples), dtype="<U8")
+        for s in samples:
+            if noNeighbours[s] <= 1:
+                if self.k == 0:
+                    neighbours = similarityMatrix.iloc[s, :].values.argmax()
+                else:
+                    neighbours = similarityMatrix.iloc[s, :].values.argsort()[(len(samples) - self.k):]
             else:
-                f.write(",")
-            recurse(tree_.children_right[i], depth + 1)
-            f.write(")")
-        else:
-            f.write("'%s'" % self.decision_tree.classes_[np.argmax(tree_.value[i][0])])
+                neighbours = np.argwhere(thresholdMat.iloc[s, :] > 0).flatten()
 
-    # Update feature labels and thresholds on the decision tree to match the rules
-    # and create list of features used in leaf nodes
-    recurse(0, 0)
-    f.write("\n")
-    f.close()
+            counterNeigh = Counter(instanceModules[neighbours])
+
+            # Maximum number of links to a module
+            maxLinks = counterNeigh.most_common(1)[0][1]
+            maxModules = [k for k, v in counterNeigh.items() if v == maxLinks]
+
+            if len(maxModules) == 1:
+                classes[s] = maxModules[0]
+            else:
+                modulesDist = {comm: np.average(similarityMatrix.iloc[s, np.argwhere(instanceModules == comm).flatten()])
+                               for comm in maxModules}
+                classes[s] = max(modulesDist, key=lambda x: modulesDist[x])
+        return classes
+
+    def predict(self, X, fingerprints):
+        samples = range(X.shape[0])
+
+        similarity_matrix = get_asym_similarity_matrix(fingerprints, self.fingerprints)
+
+        classes = self.classify_samples(self.instance_graph, similarity_matrix)
+
+        counter_classes = Counter(classes)
+        final_predictions = np.zeros(len(samples))
+
+        for comm, count in counter_classes.items():
+            samples_in_community = np.argwhere(classes == comm).transpose()[0]
+            final_predictions[samples_in_community] = self.models[comm].predict(X.iloc[samples_in_community])
+
+        return final_predictions
+
+    def print_decision_tree(self, generatePDF=True, filename="decision_tree.dot"):
+        treeData = export_graphviz(self.decision_tree, out_file=None, feature_names=self.feature_names, label="root",
+                                   class_names=self.class_names, filled=True, rounded=True, special_characters=True,
+                                   impurity=True)
+        if(generatePDF):
+            import pydotplus
+            graph = pydotplus.graph_from_dot_data(treeData)
+            graph.write_pdf("decision_tree.pdf")
+        else:
+            with open(filename, 'w') as f:
+                f.write(treeData)
+
+    def print_R_rules(self, filename):
+        f = open(filename, "w")
+
+        leafNodes = [l for l, v in enumerate(self.decision_tree.tree_.feature) if v == -2]
+        tree_ = self.decision_tree.tree_
+
+        def recurse(i, depth):
+            indent = "  " * depth
+            if i not in leafNodes:
+                f.write("%sifelse(descriptors$%s <= %0.4f," %
+                        (indent, self.feature_names[tree_.feature[i]], tree_.threshold[i]))
+                if tree_.children_left[i] not in leafNodes:
+                    f.write("\n")
+                recurse(tree_.children_left[i], depth + 1)
+                if tree_.children_right[i] not in leafNodes:
+                    f.write(",\n")
+                else:
+                    f.write(",")
+                recurse(tree_.children_right[i], depth + 1)
+                f.write(")")
+            else:
+                f.write("'%s'" % self.decision_tree.classes_[np.argmax(tree_.value[i][0])])
+
+        # Update feature labels and thresholds on the decision tree to match the rules
+        # and create list of features used in leaf nodes
+        recurse(0, 0)
+        f.write("\n")
+        f.close()
 
     def classify_samples(self, g, similarityMatrix):
         """
@@ -319,8 +358,7 @@ def print_R_rules(self, filename):
             coefficients = coefficients.append(coeffs, ignore_index=True)
             breakpoints = breakpoints.append(bkpoints, ignore_index=True)
 
-        newColumns = ['module', 'region'] + \
-                     list([a for a in coefficients.columns if a not in ['module', 'region', 'B']]) + ['B']
+        newColumns = ['module', 'region'] + list([a for a in coefficients.columns if a not in ['module', 'region', 'B']]) + ['B']
         coefficients = coefficients.reindex_axis(newColumns, axis=1)
         breakpoints = breakpoints.reindex_axis(['module', 'region', 'breakpoints', 'fStar'], axis=1)
 

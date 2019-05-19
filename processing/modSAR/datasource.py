@@ -92,6 +92,7 @@ class DataSource(metaclass=ABCMeta):
         qsar_dataset = QSARDataset(name=self.target_id,
                                    X=descriptors_df,
                                    y=clean_df[self.activity_column],
+                                   smiles=self.smiles_column,
                                    metadata=clean_df)
         return qsar_dataset
 

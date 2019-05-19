@@ -6,6 +6,8 @@ from .utils import print_progress_bar
 
 
 def apply_feature_filter(X):
+    """Remove features with near zero variance and features with high correlation"""
+
     cols_to_remove = near_zero_variance(X)
     X = X.loc[:, ~cols_to_remove].copy()
 
@@ -59,14 +61,15 @@ def find_correlation_exact(df, cutoff=0.9, verbose=False):
     for i, i_col in enumerate(correlation_order):
         print_progress_bar(count, total_comparisons)
         if mat2.isnull().all().all():
+            print_progress_bar(total_comparisons, total_comparisons)
             break
         if cols_to_remove[i_col]:
             count += n_cols
             continue
         for j, j_col in enumerate(correlation_order):
+            count += 1
             if j <= i:
                 continue
-            count += 1
             print_progress_bar(count, total_comparisons)
             if not (cols_to_remove[i_col] or cols_to_remove[j_col]):
                 if mat.loc[i_col, j_col] > cutoff:

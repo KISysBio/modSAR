@@ -8,6 +8,8 @@ import pandas as pd
 
 from py4j.java_gateway import JavaGateway, GatewayParameters
 
+from .utils import print_progress_bar
+
 
 class JavaCDKBridge:
     """Class responsible for establishing the bridge between Python and the Java library CDK
@@ -136,12 +138,33 @@ class CDKUtils:
             descriptors_df[col] = descriptors_df[col].astype(float)
         return descriptors_df
 
-    def calculate_fingerprint(smiles, circular_type=3):
-        fingerprinter = cdk.fingerprint.CircularFingerprinter(circular_type)
+    def calculate_fingerprint(self, smiles, circular_type=3):
+        """Calculate circular fingerprint
+
+        Args:
+            smiles (str): SMILES representing a molecule
+            circular_type (int): Type of circular fingerprint.
+                ECFP0 = 1, ECFP2 = 2, ECFP4 = 3, ECFP6 = 4,
+                FCFP0 = 5, FCFP2 = 6, FCFP4 = 7, FCFP6 = 8
+        """
+
+        fingerprinter = self.cdk.fingerprint.CircularFingerprinter(circular_type)
         mol = self.smiles_parser.parseSmiles(smiles)
         return fingerprinter.getBitFingerprint(mol)
 
-    def calculate_pairwise_tanimoto(df, smiles_column, circular_type=3):
+    def calculate_tanimoto_similarity(self, smiles1, smiles2):
+        """Calculate Tanimoto similarity between two molecules
+
+        Args:
+            smiles1 (str): SMILES string representing a first molecule
+            smiles2 (str): SMILES string representing a second molecule
+        """
+        fp1 = self.calculate_fingerprint(smiles1)
+        fp2 = self.calculate_fingerprint(smiles2)
+        sim = self.cdk.similarity.Tanimoto.calculate(fp1, fp2)
+        return sim
+
+    def calculate_pairwise_tanimoto(self, df, smiles_column, circular_type=3):
         """
 
         Args:
@@ -149,17 +172,26 @@ class CDKUtils:
                 ECFP0 = 1, ECFP2 = 2, ECFP4 = 3, ECFP6 = 4,
                 FCFP0 = 5, FCFP2 = 6, FCFP4 = 7, FCFP6 = 8
         """
-        fps = df[smiles_column].apply(lambda x: calculate_fingerprint(x, circular_type))
+        num_samples = len(df)
+        total_comparisons = num_samples * (num_samples - 1)
 
-        matrix = np.zeros((len(fps), len(fps)), dtype="f8")
-        for i, fp1 in enumerate(fps):
-            for j, fp2 in enumerate(fps):
+        count = 0
+        print_progress_bar(count, total_comparisons)
+        matrix = np.zeros((num_samples, num_samples), dtype="f8")
+        for i in range(num_samples):
+            mol1 = df[smiles_column].iloc[i]
+            for j in range(num_samples):
+                count += 1
                 if j < i:
+                    print_progress_bar(count, total_comparisons)
                     continue
                 elif j == i:
                     matrix[i, j] = 0
                 else:
-                    sim = self.cdk.similarity.Tanimoto.calculate(fp1, fp2)
+                    mol2 = df[smiles_column].iloc[j]
+
+                    sim = self.calculate_tanimoto_similarity(mol1, mol2)
                     matrix[i, j] = sim
                     matrix[j, i] = sim
+                print_progress_bar(count, total_comparisons)
         return matrix

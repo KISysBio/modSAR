@@ -12,6 +12,7 @@ import numpy as np
 import scipy.sparse as sp
 import pandas as pd
 
+from .cdk_utils import CDKUtils
 from .features import apply_feature_filter
 
 
@@ -46,15 +47,8 @@ class QSARDataset(Dataset):
             X = apply_feature_filter(X)
         super().__init__(name, X, y, metadata)
 
-        self.fingerprints = self._calculate_fingerprints(smiles)
-
-    def _calculate_fingerprints(self, smiles):
         cdk_utils = CDKUtils()
-
-
-
-
-        # self.fingerprint = self._parse_fingerprint(excelFile.parse("ECFP4_bits").set_index(self.metadata["ID"])["BITS"])
+        self.pairwise_similarity = cdk_utils.calculate_pairwise_tanimoto(metadata, smiles)
 
     def __str__(self):
         return self.__repr__()
