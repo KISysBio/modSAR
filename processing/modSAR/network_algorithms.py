@@ -56,7 +56,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             bestThreshold = None
             bestClusteringCoefficient = None
             bestG = None
-            for threshold in [t / 100.0 for t in range(20, 40)]:
+            for threshold in np.linspace(0.20, 0.40, 20):
                 g = self.create_graph(pairwise_similarity, threshold, k, is_directed=False, is_weighted=is_weighted)
                 if bestThreshold is None or g["globalClusteringCoefficient"] > bestClusteringCoefficient:
                     bestG = g
@@ -81,6 +81,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.number_modules = len(counter_comm.keys())
 
         for comm, count in counter_comm.items():
+            print("Num. samples in comm %s: %d" % (comm, count))
             samplesInCommunity = np.argwhere(communities == comm).transpose()[0]
             currentX = X.iloc[samplesInCommunity].reset_index(drop=True)
             currentY = y[samplesInCommunity].reset_index(drop=True)

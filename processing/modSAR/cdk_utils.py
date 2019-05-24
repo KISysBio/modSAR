@@ -84,7 +84,7 @@ class CDKUtils:
         self.java_bridge = JavaCDKBridge()
         self.java_bridge.start_cdk_java_bridge()
 
-        self.cdk = self.java_bridge.gateway.jvm.org.openscience.cdk
+        self.cdk = self.java_bridge.gateway.new_jvm_view().org.openscience.cdk
         self.builder = self.cdk.DefaultChemObjectBuilder.getInstance()
         self.smiles_parser = self.cdk.smiles.SmilesParser(self.builder)
         self.descriptors_list = self._get_descriptors_list()
