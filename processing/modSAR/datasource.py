@@ -8,7 +8,7 @@ This module supports representation of functional bioactivies
 
 """
 
-import chembl_webresource_client
+import chembl_webresource_client.new_client as chembl_client
 import numpy as np
 import pandas as pd
 
@@ -38,7 +38,7 @@ class DataSource(metaclass=ABCMeta):
     """
 
     def __init__(self, target_id, smiles_column, compound_id_column, activity_column,
-                 is_chembl_data, **kwargs):
+                 is_chembl_data, apply_filter, **kwargs):
         """
         Generic DataSource construtor
 
@@ -67,6 +67,7 @@ class DataSource(metaclass=ABCMeta):
         self.compound_id_column = compound_id_column
         self.activity_column = activity_column
         self.is_chembl_data = is_chembl_data
+        self.apply_filter = apply_filter
         for attr, val in kwargs.items():
             setattr(self, attr, val)
 
@@ -93,7 +94,8 @@ class DataSource(metaclass=ABCMeta):
                                    X=descriptors_df,
                                    y=clean_df[self.activity_column],
                                    smiles=self.smiles_column,
-                                   metadata=clean_df)
+                                   metadata=clean_df,
+                                   apply_filter=self.apply_filter)
         return qsar_dataset
 
 
@@ -128,10 +130,11 @@ class ChEMBLApiDataSource(DataSource):
                                                   compound_id_column=compound_id_column,
                                                   activity_column=activity_column,
                                                   is_chembl_data=True,
-                                                  standard_types=standard_types)
+                                                  standard_types=standard_types,
+                                                  apply_filter=apply_filter)
 
     def _get_bioactivities_df(self):
-        activity = chembl_webresource_client.new_client.new_client.activity
+        activity = chembl_client.new_client.activity
         result = activity.filter(target_chembl_id=self.target_id,
                                  assay_type__iregex='(B|F)')
 
@@ -205,7 +208,8 @@ class GenericFileDataSource(DataSource):
                          compound_id_column=compound_id_column,
                          activity_column=activity_column,
                          is_chembl_data=is_chembl_data,
-                         filepath=filepath)
+                         filepath=filepath,
+                         apply_filter=apply_filter)
 
     def _get_bioactivities_df(self):
         if self.filepath.endswith('.csv'):

@@ -18,8 +18,7 @@ class Preprocessing:
             missing_attributes.append(['compound_id_column'])
 
         if (len(missing_attributes) > 1):
-            raise ValueError('Required attribute(s) missing: %s' %
-                             (', '.join(missing_attributes)))
+            raise ValueError('Required attribute(s) missing: %s' % (', '.join(missing_attributes)))
 
         self.compound_id_column = compound_id_column
         self.activity_column = activity_column
@@ -78,7 +77,8 @@ def remove_duplicated(bioactivities_df, compound_id_column, activity_column):
     grouped_dataset = grouped_dataset.apply(lambda x: mark_to_remove(x, activity_column))
 
     # The resulting dataset, clean_df, does not contain duplicated entries
-    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index())
+    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index(),
+                         on='parent_molecule_chembl_id')
     merged_df = merged_df[~merged_df['mark_to_remove']]
     clean_df = merged_df.groupby(compound_id_column).head(1)
 

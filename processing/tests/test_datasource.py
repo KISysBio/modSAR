@@ -12,3 +12,11 @@ class TestChEMBLApiDataSource(unittest.TestCase):
                                                  standard_types='IC50')
         result_df = chembl_data_source.bioactivities_df
         self.assertTrue(all(result_df['target_chembl_id'] == target_chembl_id))
+
+
+class TestChEMBLFileDataSource(unittest.TestCase):
+    pass
+
+
+class TestGenericFileDataSource(unittest.TestCase):
+    pass
