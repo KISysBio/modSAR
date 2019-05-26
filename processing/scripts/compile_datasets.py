@@ -4,7 +4,7 @@ import pandas as pd
 from modSAR.datasource import ChEMBLApiDataSource
 from modSAR.network_algorithms import ModSAR
 
-CHEMBL_DATASETS = ['CHEMBL2363', 'CHEMBL202', 'CHEMBL245', 'CHEMBL4777', 'CHEMBL4018']
+CHEMBL_DATASETS = ['CHEMBL245', 'CHEMBL2363', 'CHEMBL202', 'CHEMBL4777', 'CHEMBL4018']
 
 for dataset in CHEMBL_DATASETS:
     print("Downloading CHEMBL Dataset: %s" % dataset)

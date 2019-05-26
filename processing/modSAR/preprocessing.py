@@ -77,8 +77,7 @@ def remove_duplicated(bioactivities_df, compound_id_column, activity_column):
     grouped_dataset = grouped_dataset.apply(lambda x: mark_to_remove(x, activity_column))
 
     # The resulting dataset, clean_df, does not contain duplicated entries
-    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index(),
-                         on='parent_molecule_chembl_id')
+    merged_df = pd.merge(bioactivities_df, grouped_dataset.reset_index(), on=activity_column)
     merged_df = merged_df[~merged_df['mark_to_remove']]
     clean_df = merged_df.groupby(compound_id_column).head(1)
 

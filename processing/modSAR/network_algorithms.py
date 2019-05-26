@@ -6,6 +6,9 @@ import oplrareg
 from sklearn.tree import export_graphviz
 from collections import Counter
 
+from .graph import GraphUtils
+from .cdk_utils import CDKUtils
+
 
 class ModSAR(oplrareg.BaseOplraEstimator):
     """Implementation of ModSAR algorithm
@@ -27,20 +30,19 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.models = None
         self.instance_graph = None
 
-    def fit(self, X, y, pairwise_similarity, threshold=None, k=0):
+    def fit(self, X, y, similarity_matrix, X_smiles, threshold=None, k=0):
         """Fits a modSAR model to the input data
 
         Args:
             X (pandas.DataFrame): DataFrame describing the molecular descriptors
             y (pandas.Series): The outcome variable (e.g.: pIC50)
-            fingerprint (pandas.DataFrame): Each row of these DataFrame must contain
-                a fingerprint of the molecule in the form of a binary array.
             threshold (float): a fixed threshold to use
 
         """
 
         if X.shape[0] != len(y):
             raise ValueError("Data and target values have different dimensions.")
+        # TODO: Make more checks on the input data
 
         print(self)
 
@@ -56,7 +58,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             bestClusteringCoefficient = None
             bestG = None
             for threshold in np.linspace(0.20, 0.40, 20):
-                g = self.create_graph(pairwise_similarity, threshold, k, is_directed=False, is_weighted=is_weighted)
+                g = GraphUtils.create_graph(similarity_matrix, threshold, k, is_directed=False, is_weighted=is_weighted)
                 if bestThreshold is None or g["globalClusteringCoefficient"] > bestClusteringCoefficient:
                     bestG = g
                     bestThreshold = threshold
@@ -65,7 +67,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             threshold = bestThreshold
             print("Best Threshold = %.2f | ACC = %.3f" % (bestThreshold, bestClusteringCoefficient))
         else:
-            g = create_graph(pairwise_similarity, threshold, k, is_directed=False, is_weighted=is_weighted)
+            g = create_graph(similarity_matrix, threshold, k, is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
         self.k = k
@@ -104,67 +106,20 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         counter_comm = Counter(communities)
         print("Communities: %s" % counter_comm)
         g.vs["community"] = communities
+        g.vs['SMILES'] = X_smiles
         self.instance_graph = g
         self.class_names = list(set(communities))
         self.feature_names = X.columns
-
-    def create_graph(self, adjMatrix, threshold, k=5, is_directed=True, is_weighted=True):
-
-        thresholdMat = (adjMatrix >= threshold) * adjMatrix
-        thresholdMat = thresholdMat.tolist()
-
-        g = ig.Graph.Weighted_Adjacency(thresholdMat, loops=False)
-
-        if not is_directed:
-            if is_weighted:
-                w = g.es["weight"]
-                g.to_undirected()
-                g.es["weight"] = w
-            else:
-                g.to_undirected()
-
-        belowThreshold = [i for i, s in enumerate(g.strength(mode=1)) if s < k]
-        edgeId = len(g.es())
-
-        for n in belowThreshold:
-            neighbours = np.flip(np.argsort(adjMatrix.iloc[n].values), axis=0)[0:k]
-            for neigh in neighbours:
-                shouldAdd = not g.es.select(_source=n, _target=neigh) and (is_directed or (not is_directed and not g.es.select(_source=neigh, _target=n)))
-                if shouldAdd:
-                    g.add_edge(n, neigh)
-                    if is_weighted:
-                        g.es[edgeId]["weight"] = adjMatrix.iloc[n, neigh]
-                    edgeId += 1
-            g.vs[n]["usedKnn"] = True
-
-        g.vs["degree"] = g.degree()
-
-        if is_weighted:
-            g["globalClusteringCoefficient"] = g.transitivity_avglocal_undirected(weights="weight", mode="zero")
-        else:
-            g["globalClusteringCoefficient"] = g.transitivity_avglocal_undirected(mode="zero")
-
-        if is_weighted:
-            vc = g.community_multilevel(weights='weight')
-        else:
-            vc = g.community_multilevel()
-        g.vs["louvain"] = ['m%02d' % (x + 1) for x in vc.membership]
-        g["threshold"] = threshold
-        g["k"] = k
-
-        # g["edgeDensity"] = g.density()
-        # g["metric"] = g["globalClusteringCoefficient"] - 0.4 * g["edgeDensity"]
-        return g
 
     def classify_samples(self, g, similarityMatrix):
         """
         Classify samples according to their neighbourhood in the graph
 
-        :param g: graph obtained during training (fit)
-        :param similarityMatrix: n x m matrix of similarity between the n samples to be classified and m nodes in graph g
-        :param majority: should a sample be assigned to the module where most of its connections are? (majority = True) *default
-            or should it be assigned to the module where the average similarity is higher? (majority = False)
-        :return:
+        Args:
+            g: graph obtained during training (fit)
+            similarityMatrix: n x m matrix of similarity between the n samples to be classified and m nodes in graph g
+            param majority: should a sample be assigned to the module where most of its connections are? (majority = True) *default
+                                or should it be assigned to the module where the average similarity is higher? (majority = False)
         """
 
         samples = range(similarityMatrix.shape[0])
@@ -195,15 +150,14 @@ class ModSAR(oplrareg.BaseOplraEstimator):
                 classes[s] = max(modulesDist, key=lambda x: modulesDist[x])
         return classes
 
-    def predict(self, X, fingerprints):
-        samples = range(X.shape[0])
+    def predict(self, X, X_smiles):
 
         similarity_matrix = get_asym_similarity_matrix(fingerprints, self.fingerprints)
 
         classes = self.classify_samples(self.instance_graph, similarity_matrix)
 
         counter_classes = Counter(classes)
-        final_predictions = np.zeros(len(samples))
+        final_predictions = np.zeros(X.shape[0])
 
         for comm, count in counter_classes.items():
             samples_in_community = np.argwhere(classes == comm).transpose()[0]
