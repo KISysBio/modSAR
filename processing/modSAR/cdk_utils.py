@@ -8,7 +8,7 @@ import pandas as pd
 
 from py4j.java_gateway import JavaGateway, GatewayParameters
 
-from .utils import print_progress_bar
+from .utils import Singleton, print_progress_bar
 
 
 class JavaCDKBridge:
@@ -77,7 +77,7 @@ class JavaCDKBridge:
         self.is_server_running = False
 
 
-class CDKUtils:
+class CDKUtils(metaclass=Singleton):
     """"""
 
     def __init__(self):

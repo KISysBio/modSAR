@@ -5,6 +5,15 @@ from pyomo.core.base.param import IndexedParam
 from rdkit.DataStructs.cDataStructs import TanimotoSimilarity
 
 
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 # Print iterations progress
 def print_progress_bar(iteration, total, prefix='', suffix='',
                        decimals=1, length=100, fill='█'):
