@@ -111,56 +111,49 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.class_names = list(set(communities))
         self.feature_names = X.columns
 
-    def classify_samples(self, g, similarityMatrix):
-        """
-        Classify samples according to their neighbourhood in the graph
+        cdk_utils = CDKUtils()
+        self.fingerprints_training = [cdk_utils.calculate_fingerprint(smiles) for smiles in X_smiles]
 
-        Args:
-            g: graph obtained during training (fit)
-            similarityMatrix: n x m matrix of similarity between the n samples to be classified and m nodes in graph g
-            param majority: should a sample be assigned to the module where most of its connections are? (majority = True) *default
-                                or should it be assigned to the module where the average similarity is higher? (majority = False)
-        """
+    def classify_sample(self, sample_smiles, cdk_utils=None):
+        """"""
 
-        samples = range(similarityMatrix.shape[0])
-        thresholdMat = (similarityMatrix >= self.threshold) * similarityMatrix
-        noNeighbours = thresholdMat.astype(bool).sum(axis=1)
-        instanceModules = np.array(g.vs["community"])
-        classes = np.empty(len(samples), dtype="<U8")
-        for s in samples:
-            if noNeighbours[s] <= 1:
-                if self.k == 0:
-                    neighbours = similarityMatrix.iloc[s, :].values.argmax()
-                else:
-                    neighbours = similarityMatrix.iloc[s, :].values.argsort()[(len(samples) - self.k):]
-            else:
-                neighbours = np.argwhere(thresholdMat.iloc[s, :] > 0).flatten()
+        if cdk_utils is None:
+            cdk_utils = CDKUtils()
 
-            counterNeigh = Counter(instanceModules[neighbours])
+        fp_sample = cdk_utils.calculate_fingerprint(sample_smiles)
+        similarities = [cdk_utils.cdk.similarity.Tanimoto.calculate(fp_sample, fp_training)
+                        for fp_training in self.fingerprints_training]
+        similarities = np.array(similarities)
 
-            # Maximum number of links to a module
-            maxLinks = counterNeigh.most_common(1)[0][1]
-            maxModules = [k for k, v in counterNeigh.items() if v == maxLinks]
+        neighbours = np.argwhere(similarities >= self.threshold).flatten()
+        if len(neighbours) <= 1:
+            neighbours = np.array([similarities.argmax()])
 
-            if len(maxModules) == 1:
-                classes[s] = maxModules[0]
-            else:
-                modulesDist = {comm: np.average(similarityMatrix.iloc[s, np.argwhere(instanceModules == comm).flatten()])
-                               for comm in maxModules}
-                classes[s] = max(modulesDist, key=lambda x: modulesDist[x])
-        return classes
+        modules_training = np.array(self.instance_graph.vs["community"])
+        neighbours_modules = Counter(modules_training[neighbours])
+        # Maximum number of links to a module
+        max_links = neighbours_modules.most_common(1)[0][1]
+        max_modules = [k for k, v in neighbours_modules.items() if v == max_links]
+
+        if len(max_modules) == 1:
+            closest_module = max_modules[0]
+        else:
+            dist_to_modules = {comm: np.average(similarities[np.argwhere(modules_training == comm).flatten()])
+                               for comm in max_modules}
+            closest_module = max(dist_to_modules, key=lambda x: dist_to_modules[x])
+        return closest_module
 
     def predict(self, X, X_smiles):
+        if len(X) != len(X_smiles):
+            raise ValueError("X and X_smiles do not have the same length.")
 
-        similarity_matrix = get_asym_similarity_matrix(fingerprints, self.fingerprints)
+        modules = np.array([self.classify_sample(sample_smiles) for sample_smiles in X_smiles])
 
-        classes = self.classify_samples(self.instance_graph, similarity_matrix)
-
-        counter_classes = Counter(classes)
+        counter_modules = Counter(modules)
         final_predictions = np.zeros(X.shape[0])
 
-        for comm, count in counter_classes.items():
-            samples_in_community = np.argwhere(classes == comm).transpose()[0]
+        for comm, count in counter_modules.items():
+            samples_in_community = np.argwhere(modules == comm).transpose()[0]
             final_predictions[samples_in_community] = self.models[comm].predict(X.iloc[samples_in_community])
 
         return final_predictions
