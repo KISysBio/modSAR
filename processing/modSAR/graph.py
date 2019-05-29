@@ -5,7 +5,7 @@ import igraph as ig
 class GraphUtils:
 
     @staticmethod
-    def create_graph(similarity_matrix, threshold, k=5, is_directed=True, is_weighted=True):
+    def create_graph(similarity_matrix, threshold, k=0, is_directed=False, is_weighted=False):
         """Apply a threshold to adjacency matrix to return a sparser graph
 
         Args:
@@ -13,7 +13,10 @@ class GraphUtils:
         """
 
         if type(similarity_matrix) != np.ndarray:
-            raise ValueError('Similarity matrix is not a numpy array. Type = %s' % type(similarity_matrix))
+            if type(similarity_matrix) == pd.DataFrame:
+                similarity_matrix = similarity_matrix.values
+            else:
+                raise ValueError('Similarity matrix is not a numpy array or pandas DataFrame. Type = %s' % type(similarity_matrix))
         if similarity_matrix.shape[0] != similarity_matrix.shape[1]:
             raise ValueError('Similarity matrix is not symmetrical. Dim: %d x %d' % (similarity_matrix.shape[0], similarity_matrix.shape[1]))
         if (similarity_matrix < 0).any() or (similarity_matrix > 1).any():

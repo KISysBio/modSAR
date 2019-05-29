@@ -194,4 +194,7 @@ class CDKUtils(metaclass=Singleton):
                     matrix[i, j] = sim
                     matrix[j, i] = sim
                 print_progress_bar(count, total_comparisons)
-        return matrix
+
+        # Convert numpy matrix to pandas DataFrame
+        similarity_df = pd.DataFrame(matrix, index=df.index, columns=df.index)
+        return similarity_df

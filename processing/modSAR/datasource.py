@@ -90,9 +90,15 @@ class DataSource(metaclass=ABCMeta):
 
         cdk_utils = CDKUtils()
         descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
+        descriptors_df.index = clean_df[self.compound_id_column].values
+        X = descriptors_df
+
+        y = clean_df[self.activity_column]
+        y.index = X.index
+
         qsar_dataset = QSARDataset(name=self.target_id,
-                                   X=descriptors_df,
-                                   y=clean_df[self.activity_column],
+                                   X=X,
+                                   y=y,
                                    smiles=self.smiles_column,
                                    metadata=clean_df,
                                    apply_filter=self.apply_filter)

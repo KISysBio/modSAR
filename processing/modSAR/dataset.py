@@ -48,6 +48,9 @@ class QSARDataset(Dataset):
             X = apply_feature_filter(X)
         super().__init__(name, X, y, metadata)
 
+        self.y.index = X.index
+        self.X_smiles = metadata[smiles_column]
+        self.X_smiles.index = X.index
         self.pairwise_similarity = CDKUtils().calculate_pairwise_tanimoto(metadata, smiles_column)
 
     def __str__(self):
@@ -73,8 +76,9 @@ class QSARDatasetIO():
 
         metadata = pd.read_excel(filepath, sheet_name=metadata_sheetname)
         X.index = metadata[id_column].values
-        smiles = metadata[smiles_column]
-        return QSARDataset(dataset_name, X, y, smiles_column, apply_filter=apply_filter, metadata=metadata)
+        y.index = X.index
+        return QSARDataset(dataset_name, X, y, smiles_column,
+                           apply_filter=apply_filter, metadata=metadata)
 
     @staticmethod
     def write(qsar_dataset, filepath,
