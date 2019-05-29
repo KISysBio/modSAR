@@ -164,7 +164,7 @@ class CDKUtils(metaclass=Singleton):
         sim = self.cdk.similarity.Tanimoto.calculate(fp1, fp2)
         return sim
 
-    def calculate_pairwise_tanimoto(self, df, smiles_column, circular_type=3):
+    def calculate_pairwise_tanimoto(self, df_smiles, circular_type=3):
         """
 
         Args:
@@ -172,14 +172,14 @@ class CDKUtils(metaclass=Singleton):
                 ECFP0 = 1, ECFP2 = 2, ECFP4 = 3, ECFP6 = 4,
                 FCFP0 = 5, FCFP2 = 6, FCFP4 = 7, FCFP6 = 8
         """
-        num_samples = len(df)
+        num_samples = len(df_smiles)
         total_comparisons = num_samples * (num_samples - 1)
 
         count = 0
         print_progress_bar(count, total_comparisons)
         matrix = np.zeros((num_samples, num_samples), dtype="f8")
         for i in range(num_samples):
-            mol1 = df[smiles_column].iloc[i]
+            mol1 = df_smiles.iloc[i]
             for j in range(num_samples):
                 count += 1
                 if j < i:
@@ -188,7 +188,7 @@ class CDKUtils(metaclass=Singleton):
                 elif j == i:
                     matrix[i, j] = 0
                 else:
-                    mol2 = df[smiles_column].iloc[j]
+                    mol2 = df_smiles.iloc[j]
 
                     sim = self.calculate_tanimoto_similarity(mol1, mol2)
                     matrix[i, j] = sim
@@ -196,5 +196,5 @@ class CDKUtils(metaclass=Singleton):
                 print_progress_bar(count, total_comparisons)
 
         # Convert numpy matrix to pandas DataFrame
-        similarity_df = pd.DataFrame(matrix, index=df.index, columns=df.index)
+        similarity_df = pd.DataFrame(matrix, index=df_smiles.index, columns=df_smiles.index)
         return similarity_df

@@ -55,8 +55,8 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         if threshold is None:
             g, threshold = GraphUtils.find_optimal_threshold(similarity_matrix)
         else:
-            g, threshold = GraphUtils.create_graph(similarity_matrix, threshold, k,
-                                                   is_directed=False, is_weighted=is_weighted)
+            g = GraphUtils.create_graph(similarity_matrix, threshold, k,
+                                        is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
         self.k = k
@@ -74,7 +74,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             print("Num. samples in comm %s: %d" % (comm, count))
             samplesInCommunity = np.argwhere(communities == comm).transpose()[0]
             currentX = X.iloc[samplesInCommunity].reset_index(drop=True)
-            currentY = y[samplesInCommunity].reset_index(drop=True)
+            currentY = y.iloc[samplesInCommunity, 0].reset_index(drop=True)
 
             oplra_regularised = oplrareg.OplraRegularised(self.lam,
                                                           self.epsilon,
