@@ -8,6 +8,7 @@ Type in the ChEMBL ID of the desired target (e.g. CHEMBL202) and download a XLS 
 
 """
 
+import xlwt
 import numpy as np
 import scipy.sparse as sp
 import pandas as pd
@@ -42,16 +43,46 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, name, X, y, smiles, apply_filter=True, metadata=None):
+    def __init__(self, name, X, y, smiles_column, apply_filter=True, metadata=None):
         if apply_filter:
             X = apply_feature_filter(X)
         super().__init__(name, X, y, metadata)
 
-        cdk_utils = CDKUtils()
-        self.pairwise_similarity = cdk_utils.calculate_pairwise_tanimoto(metadata, smiles)
+        self.pairwise_similarity = CDKUtils().calculate_pairwise_tanimoto(metadata, smiles_column)
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
         return 'QSAR' + super().__repr__()
+
+
+class QSARDatasetIO():
+    """Parses an Excel file into a QSARDataset object"""
+
+    @staticmethod
+    def load(filepath, dataset_name,
+             features_sheetname='normalised_features',
+             metadata_sheetname='metadata',
+             smiles_column='CANONICAL_SMILES',
+             id_column='PARENT_CMPD_CHEMBLID',
+             activity_sheetname='pchembl_value',
+             apply_filter=False):
+        X = pd.read_excel(filepath, sheet_name=features_sheetname)
+        y = pd.read_excel(filepath, sheet_name=activity_sheetname)
+
+        metadata = pd.read_excel(filepath, sheet_name=metadata_sheetname)
+        X.index = metadata[id_column].values
+        smiles = metadata[smiles_column]
+        return QSARDataset(dataset_name, X, y, smiles_column, apply_filter=apply_filter, metadata=metadata)
+
+    @staticmethod
+    def write(qsar_dataset, filepath,
+              features_sheetname='normalised_features',
+              metadata_sheetname='metadata',
+              activity_sheetname='activity'):
+
+        with pd.ExcelWriter(filepath, engine='xlwt') as writer:
+            qsar_dataset.X.to_excel(writer, sheet_name=features_sheetname, index=False)
+            qsar_dataset.y.to_excel(writer, sheet_name=activity_sheetname, index=False)
+            qsar_dataset.metadata.to_excel(writer, sheet_name=metadata_sheetname, index=False)
