@@ -69,3 +69,25 @@ class GraphUtils:
         # g["edgeDensity"] = g.density()
         # g["metric"] = g["globalClusteringCoefficient"] - 0.4 * g["edgeDensity"]
         return g
+
+    @staticmethod
+    def find_optimal_threshold(similarity_matrix, threshold_values=np.linspace(0.20, 0.40, 21),
+                               k=0, is_weighted=False, is_directed=False):
+
+        best_threshold = None
+        best_acc = None
+        best_graph = None
+        for threshold in threshold_values:
+            g = GraphUtils.create_graph(similarity_matrix,
+                                        threshold,
+                                        k=k,
+                                        is_directed=is_directed,
+                                        is_weighted=is_weighted)
+            if best_threshold is None or g["globalClusteringCoefficient"] > best_acc:
+                best_graph = g
+                best_threshold = threshold
+                best_acc = g["globalClusteringCoefficient"]
+        g = best_graph
+        threshold = best_threshold
+        print("Best Threshold = %.2f | ACC = %.3f" % (best_threshold, best_acc))
+        return g, threshold

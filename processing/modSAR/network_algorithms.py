@@ -13,7 +13,7 @@ from .cdk_utils import CDKUtils
 class ModSAR(oplrareg.BaseOplraEstimator):
     """Implementation of ModSAR algorithm
 
-    The current implementation relies on oplra_reg v0.1 (pip install oplra_reg) to
+    The current implementation relies on oplra_reg v0.2 (pip install oplra_reg) to
       create the piecewise linear regression.
 
     """
@@ -53,21 +53,10 @@ class ModSAR(oplrareg.BaseOplraEstimator):
 
         # Create graph with appropriate threshold (if not predefined)
         if threshold is None:
-            # Find best threshold
-            bestThreshold = None
-            bestClusteringCoefficient = None
-            bestG = None
-            for threshold in np.linspace(0.20, 0.40, 20):
-                g = GraphUtils.create_graph(similarity_matrix, threshold, k, is_directed=False, is_weighted=is_weighted)
-                if bestThreshold is None or g["globalClusteringCoefficient"] > bestClusteringCoefficient:
-                    bestG = g
-                    bestThreshold = threshold
-                    bestClusteringCoefficient = g["globalClusteringCoefficient"]
-            g = bestG
-            threshold = bestThreshold
-            print("Best Threshold = %.2f | ACC = %.3f" % (bestThreshold, bestClusteringCoefficient))
+            g, threshold = GraphUtils.find_optimal_threshold(similarity_matrix)
         else:
-            g = create_graph(similarity_matrix, threshold, k, is_directed=False, is_weighted=is_weighted)
+            g, threshold = GraphUtils.create_graph(similarity_matrix, threshold, k,
+                                                   is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
         self.k = k
@@ -105,6 +94,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
 
         counter_comm = Counter(communities)
         print("Communities: %s" % counter_comm)
+        g.vs['label'] = X.index
         g.vs["community"] = communities
         g.vs['SMILES'] = X_smiles
         self.instance_graph = g
