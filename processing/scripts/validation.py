@@ -36,28 +36,28 @@ class DataSplit:
 
     # Subset according to predefined split and fold number:
     def get_internal_samples(self, split_number):
-        return self.qsar_dataset.data.loc[self.get_id_internal_samples(split_number)]
+        return self.qsar_dataset.X.loc[self.get_id_internal_samples(split_number)]
 
     def get_external_samples(self, split_number):
-        return self.qsar_dataset.data.loc[self.get_id_external_samples(split_number)]
+        return self.qsar_dataset.X.loc[self.get_id_external_samples(split_number)]
 
     def get_test_samples_in_fold(self, split_number, fold_number):
-        return self.qsar_dataset.data.loc[self.get_id_internal_ts_samples(split_number, fold_number)]
+        return self.qsar_dataset.X.loc[self.get_id_internal_ts_samples(split_number, fold_number)]
 
     def get_train_samples_in_fold(self, split_number, fold_number):
-        return self.qsar_dataset.data.loc[self.get_id_internal_tr_samples(split_number, fold_number)]
+        return self.qsar_dataset.X.loc[self.get_id_internal_tr_samples(split_number, fold_number)]
 
     def get_internal_Y(self, split_number):
-        return self.qsar_dataset.target.loc[self.get_id_internal_samples(split_number)]
+        return self.qsar_dataset.y.loc[self.get_id_internal_samples(split_number)]
 
     def get_external_Y(self, split_number):
-        return self.qsar_dataset.target.loc[self.get_id_external_samples(split_number)]
+        return self.qsar_dataset.y.loc[self.get_id_external_samples(split_number)]
 
     def get_test_Y_in_fold(self, split_number, fold_number):
-        return self.qsar_dataset.target.loc[self.get_id_internal_ts_samples(split_number, fold_number)]
+        return self.qsar_dataset.y.loc[self.get_id_internal_ts_samples(split_number, fold_number)]
 
     def get_train_Y_in_fold(self, split_number, fold_number):
-        return self.qsar_dataset.target.loc[self.get_id_internal_tr_samples(split_number, fold_number)]
+        return self.qsar_dataset.y.loc[self.get_id_internal_tr_samples(split_number, fold_number)]
 
 
 class QSARValidation:
