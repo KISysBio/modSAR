@@ -101,8 +101,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.class_names = list(set(communities))
         self.feature_names = X.columns
 
-        cdk_utils = CDKUtils()
-        self.fingerprints_training = [cdk_utils.calculate_fingerprint(smiles) for smiles in X_smiles]
+        self.fingerprints_training = [CDKUtils().calculate_fingerprint(smiles) for smiles in X_smiles]
 
     def classify_sample(self, sample_smiles, cdk_utils=None):
         """"""
@@ -111,6 +110,12 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             cdk_utils = CDKUtils()
 
         fp_sample = cdk_utils.calculate_fingerprint(sample_smiles)
+
+        if self.fingerprints_training is None:
+            print("Recalculating fingerprints for samples in the graph.")
+            self.fingerprints_training = [cdk_utils.calculate_fingerprint(smiles)
+                                          for smiles in self.instance_graph.vs['SMILES']]
+
         similarities = [cdk_utils.cdk.similarity.Tanimoto.calculate(fp_sample, fp_training)
                         for fp_training in self.fingerprints_training]
         similarities = np.array(similarities)

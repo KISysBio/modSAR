@@ -1,4 +1,6 @@
 import os
+import time
+import numpy as np
 import pandas as pd
 
 from oplrareg.solvers import get_solver_definition
@@ -13,10 +15,9 @@ from sklearn.model_selection import PredefinedSplit, ParameterGrid, ParameterSam
 
 class DataSplit:
 
-    def __init__(self, qsar_dataset, n_splits=10):
+    def __init__(self, qsar_dataset, filename, n_splits=100):
         self.n_splits = n_splits
         self.qsar_dataset = qsar_dataset
-        filename = "/mnt/data/%s_splits.xlsx" % (self.qsar_dataset.name)
         excelFile = pd.ExcelFile(filename)
         self.sheets = {sheetName: excelFile.parse(sheetName) for sheetName in excelFile.sheet_names}
 
@@ -65,19 +66,19 @@ class DataSplit:
 
     def get_sim_matrix_tr_samples(self, split_number, fold_number):
         internal_tr_samples = self.get_id_internal_tr_samples(split_number, fold_number)
-        return self.qsar_dataset.pairwise_similarity.loc[internal_tr_samples]
+        return self.qsar_dataset.pairwise_similarity.loc[internal_tr_samples.values, internal_tr_samples.values]
 
     def get_sim_matrix_ts_samples(self, split_number, fold_number):
         internal_ts_samples = self.get_id_internal_ts_samples(split_number, fold_number)
-        return self.qsar_dataset.pairwise_similarity.loc[internal_ts_samples]
+        return self.qsar_dataset.pairwise_similarity.loc[internal_ts_samples.values, internal_ts_samples.values]
 
     def get_sim_matrix_internal_samples(self, split_number):
         internal_samples = self.get_id_internal_samples(split_number)
-        return self.qsar_dataset.pairwise_similarity.loc[internal_samples]
+        return self.qsar_dataset.pairwise_similarity.loc[internal_samples.values, internal_samples.values]
 
     def get_sim_matrix_external_samples(self, split_number):
         external_samples = self.get_id_external_samples(split_number)
-        return self.qsar_dataset.pairwise_similarity.loc[external_samples]
+        return self.qsar_dataset.pairwise_similarity.loc[external_samples.values, external_samples.values]
 
 
 class QSARValidation:
@@ -89,6 +90,10 @@ class QSARValidation:
         self.is_random_search = is_random_search
         self.data_split = data_split
         self.split_number = split_number
+
+        self.n_splits = data_split.n_splits
+        self.dataset_name = data_split.qsar_dataset.name
+        self.dataset_version = 'default'
 
     def predefined_cross_validation(self, param_grid, fit_params, folds=None, n_jobs=-1):
         """ Run cross validation in parallel with grid search or random search """
@@ -113,10 +118,80 @@ class QSARValidation:
         Parallel function will take care of all for loops defined here and will correctly
         allocate more computational resources when each for loop complete.
         Each for loop runs the function _fit_and_score defined above """
-        return Parallel(n_jobs=n_jobs, verbose=True, pre_dispatch='n_jobs') \
+        cross_validation_results =  \
+            Parallel(n_jobs=n_jobs, verbose=True, pre_dispatch='n_jobs') \
             (delayed(self._fit_and_score)(clone(self.estimator), fold, params, fit_params)
              for fold in range(1, self.n_splits + 1) if folds is None or (folds is not None and fold in folds)
              for params in paramGrid)
+
+        # After cross-validation, gather results and picks best model
+        (results, cv_models) = zip(*cross_validation_results)
+        results = pd.concat(results, ignore_index=True)
+
+        bestFold = results["test_mae"].idxmin()
+        # Shows parameters of the best fold
+        print("Metrics for best model in cross-validation:")
+        print(results.iloc[bestFold])
+        best_model = cv_models[bestFold]
+
+        # External Validation
+        external_X = self.data_split.get_external_samples(self.split_number)
+        external_y = self.data_split.get_external_Y(self.split_number)
+
+        if self.estimator.algorithm_name == "modSAR":
+            id_external_samples = self.data_split.get_id_external_samples(self.split_number)
+            externalX_smiles = self.data_split.qsar_dataset.X_smiles.loc[id_external_samples]
+
+            pred = best_model.predict(external_X, externalX_smiles)
+        else:
+            pred = best_model.predict(external_X)
+
+        mae_external = mean_absolute_error(external_y, pred)
+        rmse_external = mean_squared_error(external_y, pred) ** 0.5
+
+        if best_model.algorithm_name in ["OplraRegularised", "OplraFeatureSelection"]:
+            external_results = pd.DataFrame({'splitStrategy': 1, 'splitNumber': self.split_number,
+                                             'dataset': self.dataset_name, 'datasetVersion': self.dataset_version,
+                                             'fold': results.iloc[bestFold]["fold"], 'algorithm': best_model.algorithm_name,
+                                             'algorithm_version': best_model.algorithm_version, 'internal': 'FALSE',
+                                             'train_mae': 'NA', 'test_mae': mae_external,
+                                             'train_rmse': 'NA', 'test_rmse': rmse_external, 'fit_time': 'NA',
+                                             'beta': results.iloc[bestFold]['beta'],
+                                             'lambda': results.iloc[bestFold]['lambda'],
+                                             'no_regions': results.iloc[bestFold]['no_regions'],
+                                             'no_features': results.iloc[bestFold]['no_features']},
+                                            index=np.arange(1))
+        elif best_model.algorithm_name in ["OplraEnsemble"]:
+            external_results = pd.DataFrame({'splitStrategy': 1, 'splitNumber': self.split_number,
+                                             'dataset': self.dataset_name, 'datasetVersion': self.dataset_version,
+                                             'fold': results.iloc[bestFold]["fold"], 'algorithm': best_model.algorithm_name,
+                                             'algorithm_version': best_model.algorithm_version, 'internal': 'FALSE',
+                                             'train_mae': 'NA', 'test_mae': mae_external,
+                                             'train_rmse': 'NA', 'test_rmse': rmse_external, 'fit_time': 'NA',
+                                             'beta': results.iloc[bestFold]['beta'],
+                                             'lambda': results.iloc[bestFold]['lambda'],
+                                             'no_repeats': results.iloc[bestFold]['no_repeats'],
+                                             'resampling': results.iloc[bestFold]['resampling'],
+                                             'avg_no_regions': results.iloc[bestFold]['avg_no_regions'],
+                                             'no_features': results.iloc[bestFold]['no_features']},
+                                            index=np.arange(1))
+        elif best_model.algorithm_name in ["modSAR"]:
+            external_results = pd.DataFrame({'splitStrategy': 1, 'splitNumber': self.split_number,
+                                             'dataset': self.dataset_name, 'datasetVersion': self.dataset_version,
+                                             'fold': results.iloc[bestFold]["fold"], 'algorithm': best_model.algorithm_name,
+                                             'algorithm_version': best_model.algorithm_version, 'internal': 'FALSE',
+                                             'no_modules': results.iloc[bestFold]['no_modules'],
+                                             'no_classes': results.iloc[bestFold]['no_classes'],
+                                             'threshold': results.iloc[bestFold]['threshold'],
+                                             'train_mae': 'NA', 'test_mae': mae_external,
+                                             'train_rmse': 'NA', 'test_rmse': rmse_external, 'fit_time': 'NA',
+                                             'beta': results.iloc[bestFold]['beta'],
+                                             'lambda': results.iloc[bestFold]['lambda']},
+                                            index=np.arange(1))
+
+        results = pd.concat([results, external_results], ignore_index=True)
+
+        return results, best_model
 
     def _fit_and_score(self, estimator, fold, params, fit_params):
         """A iteration of cross-validation with algorithm <estimator>, fold number <fold> and samples in
@@ -144,12 +219,14 @@ class QSARValidation:
             # Obtain smiles codes for samples in training
             internal_tr_samples = self.data_split.get_id_internal_tr_samples(self.split_number, fold)
             trainX_smiles = self.data_split.qsar_dataset.X_smiles.loc[internal_tr_samples]
+            sim_matrix = self.data_split.qsar_dataset.pairwise_similarity.loc[internal_tr_samples, internal_tr_samples]
 
-            threshold = fit_params['threshold']
+            print(self.data_split.qsar_dataset)
+            print(trainX.shape)
 
-            sim_matrix = self.data_split.get_sim_matrix_tr_samples(self.split_number, fold)
-
-            estimator.fit(trainX, trainY, sim_matrix, trainX_smiles, threshold=threshold, k=fit_params['k'])
+            estimator.fit(trainX, trainY, sim_matrix, trainX_smiles,
+                          threshold=fit_params['threshold'],
+                          k=fit_params['k'])
         elif estimator.algorithm_name == "OplraRegularised" and self.estimator.algorithm_version == "v1_1":
             estimator.fit(trainX, trainY, f_star=fit_params['fStar'])
         else:

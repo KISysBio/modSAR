@@ -1,3 +1,5 @@
+"""Recreates datasets with current data downloaded from ChEMBL"""
+
 import xlwt
 import pandas as pd
 

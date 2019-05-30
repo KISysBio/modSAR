@@ -69,6 +69,7 @@ class JavaCDKBridge:
                 subprocess.Popen(command_str.split(), stdout=subprocess.PIPE)
                 self.is_server_running = True
                 self.gateway = JavaGateway(gateway_parameters=GatewayParameters(auto_convert=True))
+
         time.sleep(4)
 
     def __del__(self):
