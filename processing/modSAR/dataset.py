@@ -43,7 +43,8 @@ class QSARDataset(Dataset):
 
     """
 
-    def __init__(self, name, X, y, X_smiles, apply_filter=True, metadata=None):
+    def __init__(self, name, X, y, X_smiles, apply_filter=True, metadata=None,
+                 calculate_similarity=True):
         if apply_filter:
             X = apply_feature_filter(X)
         super().__init__(name, X, y, metadata)
@@ -51,7 +52,12 @@ class QSARDataset(Dataset):
         self.y.index = X.index
         X_smiles.index = X.index
         self.X_smiles = X_smiles
-        self.pairwise_similarity = CDKUtils().calculate_pairwise_tanimoto(X_smiles)
+
+        if calculate_similarity:
+            self.calculate_pairwise_similarity()
+
+    def calculate_pairwise_similarity(self):
+        self.pairwise_similarity = CDKUtils().calculate_pairwise_tanimoto(self.X_smiles)
 
     def __str__(self):
         return self.__repr__()
@@ -70,7 +76,8 @@ class QSARDatasetIO():
              smiles_column='CANONICAL_SMILES',
              id_column='PARENT_CMPD_CHEMBLID',
              activity_sheetname='pchembl_value',
-             apply_filter=False):
+             apply_filter=False,
+             calculate_similarity=True):
         X = pd.read_excel(filepath, sheet_name=features_sheetname)
         y = pd.read_excel(filepath, sheet_name=activity_sheetname)
 
@@ -78,7 +85,8 @@ class QSARDatasetIO():
         X.index = metadata[id_column].values
         y.index = X.index
         return QSARDataset(dataset_name, X, y, X_smiles=metadata[smiles_column],
-                           apply_filter=apply_filter, metadata=metadata)
+                           apply_filter=apply_filter, metadata=metadata,
+                           calculate_similarity=calculate_similarity)
 
     @staticmethod
     def write(qsar_dataset, filepath,
