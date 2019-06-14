@@ -7,7 +7,7 @@ from oplrareg.solvers import get_solver_definition
 from modSAR.dataset import QSARDatasetIO
 from modSAR.graph import GraphUtils
 
-from sklearn.base import clone
+from copy import deepcopy
 from sklearn.externals.joblib import Parallel, delayed
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import PredefinedSplit, ParameterGrid, ParameterSampler
@@ -120,7 +120,7 @@ class QSARValidation:
         Each for loop runs the function _fit_and_score defined above """
         cross_validation_results =  \
             Parallel(n_jobs=n_jobs, verbose=True, pre_dispatch='n_jobs') \
-            (delayed(self._fit_and_score)(clone(self.estimator), fold, params, fit_params)
+            (delayed(self._fit_and_score)(deepcopy(self.estimator), fold, params, fit_params)
              for fold in range(1, self.n_splits + 1) if folds is None or (folds is not None and fold in folds)
              for params in paramGrid)
 
@@ -188,6 +188,19 @@ class QSARValidation:
                                              'beta': results.iloc[bestFold]['beta'],
                                              'lambda': results.iloc[bestFold]['lambda']},
                                             index=np.arange(1))
+        else:
+            external_results = pd.DataFrame({'splitStrategy': 1, 'splitNumber': self.split_number,
+                                             'dataset': self.dataset_name, 'datasetVersion': self.dataset_version,
+                                             'fold': results.iloc[bestFold]["fold"], 'algorithm': best_model.algorithm_name,
+                                             'algorithm_version': best_model.algorithm_version, 'internal': 'FALSE',
+                                             'no_modules': None,
+                                             'no_classes': None,
+                                             'threshold': None,
+                                             'train_mae': 'NA', 'test_mae': mae_external,
+                                             'train_rmse': 'NA', 'test_rmse': rmse_external, 'fit_time': 'NA',
+                                             'beta': None,
+                                             'lambda': None},
+                                            index=np.arange(1))
 
         results = pd.concat([results, external_results], ignore_index=True)
 
@@ -205,7 +218,6 @@ class QSARValidation:
         print("Iteration: %d/%d" % (fold, self.n_splits))
         # Sets parameters for the algorithms, as defined by the grid search
         estimator.set_params(**params)
-        estimator.solver_def = get_solver_definition(estimator.solver_name)  # CPLEX or GLPK
 
         # Runs the algorithm in the predefined split of this Cross-Validation iteration
         trainX = self.data_split.get_train_samples_in_fold(self.split_number, fold)
@@ -216,6 +228,8 @@ class QSARValidation:
 
         start = time.time()
         if estimator.algorithm_name == "modSAR":
+            estimator.solver_def = get_solver_definition(estimator.solver_name)  # CPLEX or GLPK
+
             # Obtain smiles codes for samples in training
             internal_tr_samples = self.data_split.get_id_internal_tr_samples(self.split_number, fold)
             trainX_smiles = self.data_split.qsar_dataset.X_smiles.loc[internal_tr_samples]

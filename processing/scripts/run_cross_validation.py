@@ -8,6 +8,7 @@ from modSAR.network_algorithms import ModSAR
 
 from scripts.validation import DataSplit, QSARValidation
 
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.externals import joblib
 
 
@@ -31,7 +32,11 @@ def parse_arguments():
 
 def run_cv(algorithm_name, dataset_name, split_number, data_folder):
     filepath = os.path.join(data_folder, '%s.xlsx' % dataset_name)
-    qsar_dataset = QSARDatasetIO.load(filepath, dataset_name)
+
+    if algorithm_name.lower() == "modsar":
+        qsar_dataset = QSARDatasetIO.load(filepath, dataset_name)
+    else:
+        qsar_dataset = QSARDatasetIO.load(filepath, dataset_name, calculate_similarity=False)
 
     splits_filepath = os.path.join(data_folder, '%s_splits.xlsx' % dataset_name)
     data_split = DataSplit(qsar_dataset, filename=splits_filepath)
@@ -40,6 +45,12 @@ def run_cv(algorithm_name, dataset_name, split_number, data_folder):
         algorithm = ModSAR()
         param_grid = {'beta': [0.03], 'lam': [0.005, 0.05, 0.1], 'solver_name': ['cplex']}
         fit_params = {'k': 0}
+    elif algorithm_name.lower() == "rf" or algorithm_name.lower() == "randomforest":
+        algorithm = RandomForestRegressor()
+        algorithm.algorithm_name = 'RandomForest'
+        algorithm.algorithm_version = ""
+        param_grid = {}
+        fit_params = {}
 
     qsar_validation = QSARValidation(estimator=algorithm,
                                      data_split=data_split,
