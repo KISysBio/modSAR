@@ -3,12 +3,14 @@
 import os
 import argparse
 
+from oplrareg import OplraRegularised
 from modSAR.dataset import QSARDatasetIO
 from modSAR.network_algorithms import ModSAR
 
 from scripts.validation import DataSplit, QSARValidation
 
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
 from sklearn.externals import joblib
 
 
@@ -45,12 +47,24 @@ def run_cv(algorithm_name, dataset_name, split_number, data_folder):
         algorithm = ModSAR()
         param_grid = {'beta': [0.03], 'lam': [0.005, 0.05, 0.1], 'solver_name': ['cplex']}
         fit_params = {'k': 0}
+    elif algorithm_name.lower() == 'oplrareg':
+        algorithm = OplraRegularised()
+        param_grid = {'beta': [0.03], 'lam': [0.005, 0.05, 0.1], 'solver_name': ['cplex']}
+        fit_params = {}
     elif algorithm_name.lower() == "rf" or algorithm_name.lower() == "randomforest":
         algorithm = RandomForestRegressor()
         algorithm.algorithm_name = 'RandomForest'
         algorithm.algorithm_version = ""
         param_grid = {}
         fit_params = {}
+    elif algorithm_name.lower() == "svm":
+        algorithm = SVR()
+        algorithm.algorithm_name = 'SVM Radial'
+        algorithm.algorithm_version = ""
+        param_grid = {}
+        fit_params = {}
+    else:
+        raise ValueError("Unknown algorithm: %s" % algorithm_name)
 
     qsar_validation = QSARValidation(estimator=algorithm,
                                      data_split=data_split,
@@ -81,4 +95,4 @@ if __name__ == '__main__':
     results.to_excel(os.path.join(filepath, filename))
 
     filename = '%s_split%02d_alg_%s.joblib' % (args['dataset'], args['datasplit'], args['algorithm'].lower())
-    joblib.dump(best_model, filename)
+    joblib.dump(best_model, os.path.join(filepath, filename))

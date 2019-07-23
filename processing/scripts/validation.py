@@ -241,8 +241,13 @@ class QSARValidation:
             estimator.fit(trainX, trainY, sim_matrix, trainX_smiles,
                           threshold=fit_params['threshold'],
                           k=fit_params['k'])
-        elif estimator.algorithm_name == "OplraRegularised" and self.estimator.algorithm_version == "v1_1":
-            estimator.fit(trainX, trainY, f_star=fit_params['fStar'])
+        elif estimator.algorithm_name == "OplraRegularised":
+            trainY = trainY['pchembl_value']  # Get series
+            estimator.solver_def = get_solver_definition(estimator.solver_name)
+            if self.estimator.algorithm_version == "v1_1":
+                estimator.fit(trainX, trainY, f_star=fit_params['fStar'])
+            else:
+                estimator.fit(trainX, trainY)
         else:
             estimator.fit(trainX, trainY)
 
