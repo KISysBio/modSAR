@@ -90,7 +90,7 @@ class DataSource(metaclass=ABCMeta):
 
         cdk_utils = CDKUtils()
         descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
-        descriptors_df.index = clean_df[self.compound_id_column].values
+        descriptors_df.index = clean_df.index
         X = descriptors_df
 
         y = clean_df[self.activity_column]
@@ -99,7 +99,7 @@ class DataSource(metaclass=ABCMeta):
         qsar_dataset = QSARDataset(name=self.target_id,
                                    X=X,
                                    y=y,
-                                   smiles=self.smiles_column,
+                                   X_smiles=clean_df[self.smiles_column],
                                    metadata=clean_df,
                                    apply_filter=self.apply_filter)
         return qsar_dataset
@@ -245,7 +245,8 @@ class ChEMBLFileDataSource(DataSource):
                          compound_id_column=compound_id_column,
                          activity_column=activity_column,
                          is_chembl_data=is_chembl_data,
-                         filepath=filepath)
+                         filepath=filepath,
+                         apply_filter=apply_filter)
 
     def _get_bioactivities_df(self):
         if self.filepath.endswith('.csv'):

@@ -2,6 +2,7 @@ import os
 import py4j
 import time
 import subprocess
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -160,8 +161,18 @@ class CDKUtils(metaclass=Singleton):
             smiles1 (str): SMILES string representing a first molecule
             smiles2 (str): SMILES string representing a second molecule
         """
-        fp1 = self.calculate_fingerprint(smiles1)
-        fp2 = self.calculate_fingerprint(smiles2)
+
+        try:
+            fp1 = self.calculate_fingerprint(smiles1)
+        except Exception as e:
+            raise ValueError("Error while calculating fingerprint for %s.\n Original Error:\n%s" %
+                             (smiles1, e))
+
+        try:
+            fp2 = self.calculate_fingerprint(smiles2)
+        except Exception as e:
+            raise ValueError("Error while calculating fingerprint for %s.\n Original Error:\n%s" %
+                             (smiles2, e))
         sim = self.cdk.similarity.Tanimoto.calculate(fp1, fp2)
         return sim
 
@@ -191,7 +202,12 @@ class CDKUtils(metaclass=Singleton):
                 else:
                     mol2 = df_smiles.iloc[j]
 
-                    sim = self.calculate_tanimoto_similarity(mol1, mol2)
+                    try:
+                        sim = self.calculate_tanimoto_similarity(mol1, mol2)
+                    except Exception as e:
+                        error_msg = "Error calculating similarity: %s x %s\n%s"
+                        warnings.warn(error_msg % (df_smiles.index[i], df_smiles.index[j], e))
+                        sim = np.nan
                     matrix[i, j] = sim
                     matrix[j, i] = sim
                 print_progress_bar(count, total_comparisons)
