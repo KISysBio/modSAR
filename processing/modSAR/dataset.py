@@ -20,13 +20,15 @@ from .features import apply_feature_filter
 class Dataset:
     """Generic class to represent a data set"""
 
-    def __init__(self, dataset_name, X, y, metadata=None):
+    def __init__(self, dataset_name, X, y, metadata=None, apply_scaling=True):
         self.name = dataset_name
         self.X = X
         self.y = y
         self.metadata = metadata
         self.number_samples = X.shape[0]
         self.number_features = X.shape[1]
+        if apply_scaling:
+            self.X_norm = X.apply(lambda x: (x - x.min()) / (x.max() - x.min()))
 
     def __str__(self):
         return self.__repr__()
@@ -71,30 +73,30 @@ class QSARDatasetIO():
 
     @staticmethod
     def load(filepath, dataset_name,
-             features_sheetname='normalised_features',
+             features_sheetname='features',
              metadata_sheetname='metadata',
              smiles_column='CANONICAL_SMILES',
              id_column='PARENT_CMPD_CHEMBLID',
              activity_sheetname='pchembl_value',
              apply_filter=False,
              calculate_similarity=True):
-        X = pd.read_excel(filepath, sheet_name=features_sheetname)
-        y = pd.read_excel(filepath, sheet_name=activity_sheetname)
+        X = pd.read_excel(filepath, sheet_name=features_sheetname, index_col=id_column)
+        y = pd.read_excel(filepath, sheet_name=activity_sheetname, index_col=id_column)
 
-        metadata = pd.read_excel(filepath, sheet_name=metadata_sheetname)
-        X.index = metadata[id_column].values
-        y.index = X.index
+        metadata = pd.read_excel(filepath, sheet_name=metadata_sheetname, index_col=id_column)
         return QSARDataset(dataset_name, X, y, X_smiles=metadata[smiles_column],
                            apply_filter=apply_filter, metadata=metadata,
                            calculate_similarity=calculate_similarity)
 
     @staticmethod
     def write(qsar_dataset, filepath,
-              features_sheetname='normalised_features',
+              features_sheetname='features',
+              normalised_features_sheetname='normalised_features',
               metadata_sheetname='metadata',
               activity_sheetname='activity'):
 
         with pd.ExcelWriter(filepath, engine='xlwt') as writer:
-            qsar_dataset.X.to_excel(writer, sheet_name=features_sheetname, index=False)
-            qsar_dataset.y.to_excel(writer, sheet_name=activity_sheetname, index=False)
-            qsar_dataset.metadata.to_excel(writer, sheet_name=metadata_sheetname, index=False)
+            qsar_dataset.X.to_excel(writer, sheet_name=features_sheetname, index=True)
+            qsar_dataset.X_norm.to_excel(writer, sheet_name=normalised_features_sheetname, index=True)
+            qsar_dataset.y.to_excel(writer, sheet_name=activity_sheetname, index=True)
+            qsar_dataset.metadata.to_excel(writer, sheet_name=metadata_sheetname, index=True)

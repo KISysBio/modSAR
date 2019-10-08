@@ -77,7 +77,7 @@ class DataSource(metaclass=ABCMeta):
     def _get_bioactivities_df(self):
         pass
 
-    def build_qsar_dataset(self):
+    def build_qsar_dataset(self, calculate_similarity=True):
         """
         Preprocess bioactivities and builds a QSARDataset object
         """
@@ -101,7 +101,8 @@ class DataSource(metaclass=ABCMeta):
                                    y=y,
                                    X_smiles=clean_df[self.smiles_column],
                                    metadata=clean_df,
-                                   apply_filter=self.apply_filter)
+                                   apply_filter=self.apply_filter,
+                                   calculate_similarity=calculate_similarity)
         return qsar_dataset
 
 

@@ -62,13 +62,20 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.k = k
         print("Threshold: {} | k: {}".format(threshold, k))
 
-        self.models = {}
-        self.W = {}
-        self.B = {}
-
         communities = np.array(g.vs["louvain"], dtype="<U8")
         counter_comm = Counter(communities)
         self.number_modules = len(counter_comm.keys())
+        print("Communities: %s" % counter_comm)
+        g.vs['label'] = X.index
+        g.vs["community"] = communities
+        g.vs['SMILES'] = X_smiles
+        self.instance_graph = g
+        self.class_names = list(set(communities))
+        self.feature_names = X.columns
+
+        self.models = {}
+        self.W = {}
+        self.B = {}
 
         for comm, count in counter_comm.items():
             print("Num. samples in comm %s: %d" % (comm, count))
@@ -91,16 +98,6 @@ class ModSAR(oplrareg.BaseOplraEstimator):
                 self.B["%s-r%d" % (comm, region)] = oplra_regularised.final_model.B[region].value
 
         self.number_classes = len(self.W.keys())
-
-        counter_comm = Counter(communities)
-        print("Communities: %s" % counter_comm)
-        g.vs['label'] = X.index
-        g.vs["community"] = communities
-        g.vs['SMILES'] = X_smiles
-        self.instance_graph = g
-        self.class_names = list(set(communities))
-        self.feature_names = X.columns
-
         self.fingerprints_training = [CDKUtils().calculate_fingerprint(smiles) for smiles in X_smiles]
 
     def classify_sample(self, sample_smiles, cdk_utils=None):
