@@ -162,7 +162,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             breakpoints = breakpoints.append(bkpoints, ignore_index=True)
 
         newColumns = ['module', 'region'] + list([a for a in coefficients.columns if a not in ['module', 'region', 'B']]) + ['B']
-        coefficients = coefficients.reindex_axis(newColumns, axis=1)
-        breakpoints = breakpoints.reindex_axis(['module', 'region', 'breakpoints', 'fStar'], axis=1)
+        coefficients = coefficients.loc[:, newColumns]
+        breakpoints = breakpoints.loc[:, ['module', 'region', 'breakpoints', 'fStar']]
 
         return coefficients, breakpoints
