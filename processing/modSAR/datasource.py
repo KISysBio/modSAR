@@ -8,9 +8,12 @@ This module supports representation of functional bioactivies
 
 """
 
-import chembl_webresource_client.new_client as chembl_client
+import chembl_webresource_client
 import numpy as np
 import pandas as pd
+
+from rdkit import Chem
+from rdkit.Chem import AllChem
 
 from abc import ABCMeta, abstractmethod
 from .utils import print_progress_bar
@@ -77,7 +80,7 @@ class DataSource(metaclass=ABCMeta):
     def _get_bioactivities_df(self):
         pass
 
-    def build_qsar_dataset(self, calculate_similarity=True):
+    def build_qsar_dataset(self, type="cdk", calculate_similarity=True):
         """
         Preprocess bioactivities and builds a QSARDataset object
         """
@@ -88,10 +91,28 @@ class DataSource(metaclass=ABCMeta):
                                    remove_duplicated=True)
         clean_df = preprocess.do(self.bioactivities_df)
 
-        cdk_utils = CDKUtils()
-        descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
-        descriptors_df.index = clean_df.index
-        X = descriptors_df
+        if type == "cdk":
+            cdk_utils = CDKUtils()
+            descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
+            descriptors_df.index = clean_df.index
+            X = descriptors_df
+        elif type == "ecfp4":
+            n_bits = 1024
+            smiles = clean_df[self.smiles_column]
+
+            descriptors_df = pd.DataFrame(columns=['Bit_%04d' % x for x in range(n_bits)],
+                                          index=clean_df.index, dtype=int)
+            for i in range(len(smiles)):
+                try:
+                    molecule = AllChem.MolFromSmiles(smiles.iloc[i])
+                    fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, 4, nBits=n_bits)
+                except Exception:
+                    raise ValueError("Error parsing molecule %s" % (smiles.index[i]))
+                for j in range(n_bits):
+                    descriptors_df.iloc[i][j] = int(fingerprint.ToBitString()[j])
+            X = descriptors_df
+        else:
+            raise ValueError("Type of descriptors is not known: %s" % type)
 
         y = clean_df[self.activity_column]
         y.index = X.index
@@ -141,7 +162,7 @@ class ChEMBLApiDataSource(DataSource):
                                                   apply_filter=apply_filter)
 
     def _get_bioactivities_df(self):
-        activity = chembl_client.new_client.activity
+        activity = chembl_webresource_client.new_client.new_client.activity
         result = activity.filter(target_chembl_id=self.target_id,
                                  assay_type__iregex='(B|F)')
 

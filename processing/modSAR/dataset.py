@@ -8,7 +8,7 @@ Type in the ChEMBL ID of the desired target (e.g. CHEMBL202) and download a XLS 
 
 """
 
-import xlwt
+import xlsxwriter
 import numpy as np
 import scipy.sparse as sp
 import pandas as pd
@@ -95,7 +95,7 @@ class QSARDatasetIO():
               metadata_sheetname='metadata',
               activity_sheetname='activity'):
 
-        with pd.ExcelWriter(filepath, engine='xlwt') as writer:
+        with pd.ExcelWriter(filepath, engine='xlsxwriter') as writer:
             qsar_dataset.X.to_excel(writer, sheet_name=features_sheetname, index=True)
             qsar_dataset.X_norm.to_excel(writer, sheet_name=normalised_features_sheetname, index=True)
             qsar_dataset.y.to_excel(writer, sheet_name=activity_sheetname, index=True)
