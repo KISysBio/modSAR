@@ -53,9 +53,9 @@ class ModSAR(oplrareg.BaseOplraEstimator):
 
         # Create graph with appropriate threshold (if not predefined)
         if threshold is None:
-            g, threshold = GraphUtils.find_optimal_threshold(similarity_matrix)
+            g, threshold = GraphUtils.find_optimal_threshold(similarity_matrix.loc[X.index, X.index])
         else:
-            g = GraphUtils.create_graph(similarity_matrix, threshold, k,
+            g = GraphUtils.create_graph(similarity_matrix.loc[X.index, X.index], threshold, k,
                                         is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
@@ -139,6 +139,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         if len(X) != len(X_smiles):
             raise ValueError("X and X_smiles do not have the same length.")
 
+        filtered_x_smiles = X_smiles.iloc[X.index]
         modules = np.array([self.classify_sample(sample_smiles) for sample_smiles in X_smiles])
 
         counter_modules = Counter(modules)
