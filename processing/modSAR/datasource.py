@@ -96,19 +96,21 @@ class DataSource(metaclass=ABCMeta):
             descriptors_df = cdk_utils.calculate_descriptors(clean_df, self.smiles_column)
             descriptors_df.index = clean_df.index
             X = descriptors_df
-        elif type == "ecfp4":
-            n_bits = 1024
+        elif "morgan" in type:
+
+            nBits = 1024
+            radius = int(type.replace("morgan", ""))
             smiles = clean_df[self.smiles_column]
 
-            descriptors_df = pd.DataFrame(columns=['Bit_%04d' % x for x in range(n_bits)],
+            descriptors_df = pd.DataFrame(columns=['Bit_%04d' % x for x in range(nBits)],
                                           index=clean_df.index, dtype=int)
             for i in range(len(smiles)):
                 try:
                     molecule = AllChem.MolFromSmiles(smiles.iloc[i])
-                    fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, 4, nBits=n_bits)
+                    fingerprint = AllChem.GetMorganFingerprintAsBitVect(molecule, radius, nBits=nBits)
                 except Exception:
                     raise ValueError("Error parsing molecule %s" % (smiles.index[i]))
-                for j in range(n_bits):
+                for j in range(nBits):
                     descriptors_df.iloc[i][j] = int(fingerprint.ToBitString()[j])
             X = descriptors_df
         else:
