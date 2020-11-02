@@ -2,12 +2,16 @@ import igraph as ig
 import numpy as np
 import pandas as pd
 import oplrareg
+import rdkit
 
+from rdkit.Chem import AllChem
 from sklearn.tree import export_graphviz
 from collections import Counter
 
 from .graph import GraphUtils
 from .cdk_utils import CDKUtils
+from .utils import print_progress_bar
+from .features import convert_to_morgan_fingerprints
 
 
 class ModSAR(oplrareg.BaseOplraEstimator):
@@ -18,9 +22,11 @@ class ModSAR(oplrareg.BaseOplraEstimator):
 
     """
 
-    def __init__(self, lam=0.01, epsilon=0.01, beta=0.03, solver_name="cplex"):
+    def __init__(self, metadata, lam=0.01, epsilon=0.01, beta=0.03,
+                 solver_name="cplex", threshold=None, k=0):
         super().__init__("modSAR", "v0.1", lam, epsilon, beta, solver_name)
 
+        self.metadata = metadata  # Register metadata DataFrame so the algorithm can retrieve Smiles later
         self.class_names = None
         self.feature_names = None
         self.number_classes = None
@@ -29,8 +35,13 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         self.B = None
         self.models = None
         self.instance_graph = None
+        self.threshold = threshold
+        self.k = k
 
-    def fit(self, X, y, similarity_matrix, X_smiles, threshold=None, k=0):
+    def __repr__(self):
+        return super().__repr__()
+
+    def fit(self, X, y):
         """Fits a modSAR model to the input data
 
         Args:
@@ -44,23 +55,59 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             raise ValueError("Data and target values have different dimensions.")
         # TODO: Make more checks on the input data
 
-        print(self)
+        smiles_col = self.metadata["Canonical_Smiles"]
+        rdkit_mols = [rdkit.Chem.MolFromSmiles(smiles_col.loc[idx]) for idx in X.index]
 
-        if k != 0:
+        print("Calculating fingerprints")
+        fingerprints = [AllChem.GetMorganFingerprintAsBitVect(m, 4, nBits=1024)
+                        for m in rdkit_mols]
+
+        num_samples = len(X)
+        total_comparisons = num_samples * (num_samples - 1)
+
+        print("Calculating similarity")
+        count = 0
+        # print_progress_bar(count, total_comparisons)
+        matrix = np.zeros((num_samples, num_samples), dtype="f8")
+        for i in range(num_samples):
+            fp1 = fingerprints[i]
+            for j in range(num_samples):
+                count += 1
+                if j < i:
+                    # print_progress_bar(count, total_comparisons)
+                    continue
+                elif j == i:
+                    matrix[i, j] = 0
+                else:
+                    fp2 = fingerprints[j]
+
+                    try:
+                        sim = rdkit.DataStructs.TanimotoSimilarity(fp1, fp2)
+                    except Exception as e:
+                        error_msg = "Error calculating similarity: %s x %s\n%s"
+                        warnings.warn(error_msg % (df_smiles.index[i], df_smiles.index[j], e))
+                        sim = np.nan
+                    matrix[i, j] = sim
+                    matrix[j, i] = sim
+                # print_progress_bar(count, total_comparisons)
+
+        # Convert numpy matrix to pandas DataFrame
+        similarity_df = pd.DataFrame(matrix, index=X.index, columns=X.index)
+
+        if self.k != 0:
             is_weighted = True
         else:
             is_weighted = False
 
         # Create graph with appropriate threshold (if not predefined)
-        if threshold is None:
-            g, threshold = GraphUtils.find_optimal_threshold(similarity_matrix.loc[X.index, X.index])
+        if self.threshold is None:
+            g, threshold = GraphUtils.find_optimal_threshold(similarity_df)
         else:
-            g = GraphUtils.create_graph(similarity_matrix.loc[X.index, X.index], threshold, k,
+            g = GraphUtils.create_graph(similarity_df, threshold, k,
                                         is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
-        self.k = k
-        print("Threshold: {} | k: {}".format(threshold, k))
+        print("Threshold: {} | k: {}".format(threshold, self.k))
 
         communities = np.array(g.vs["louvain"], dtype="<U8")
         counter_comm = Counter(communities)
@@ -68,7 +115,6 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         print("Communities: %s" % counter_comm)
         g.vs['label'] = X.index
         g.vs["community"] = communities
-        g.vs['SMILES'] = X_smiles
         self.instance_graph = g
         self.class_names = list(set(communities))
         self.feature_names = X.columns
@@ -98,22 +144,12 @@ class ModSAR(oplrareg.BaseOplraEstimator):
                 self.B["%s-r%d" % (comm, region)] = oplra_regularised.final_model.B[region].value
 
         self.number_classes = len(self.W.keys())
-        self.fingerprints_training = [CDKUtils().calculate_fingerprint(smiles) for smiles in X_smiles]
+        self.fingerprints_training = fingerprints
 
-    def classify_sample(self, sample_smiles, cdk_utils=None):
+    def classify_sample(self, fp_sample):
         """"""
 
-        if cdk_utils is None:
-            cdk_utils = CDKUtils()
-
-        fp_sample = cdk_utils.calculate_fingerprint(sample_smiles)
-
-        if self.fingerprints_training is None:
-            print("Recalculating fingerprints for samples in the graph.")
-            self.fingerprints_training = [cdk_utils.calculate_fingerprint(smiles)
-                                          for smiles in self.instance_graph.vs['SMILES']]
-
-        similarities = [cdk_utils.cdk.similarity.Tanimoto.calculate(fp_sample, fp_training)
+        similarities = [rdkit.DataStructs.TanimotoSimilarity(fp_sample, fp_training)
                         for fp_training in self.fingerprints_training]
         similarities = np.array(similarities)
 
@@ -135,19 +171,26 @@ class ModSAR(oplrareg.BaseOplraEstimator):
             closest_module = max(dist_to_modules, key=lambda x: dist_to_modules[x])
         return closest_module
 
-    def predict(self, X, X_smiles):
-        if len(X) != len(X_smiles):
-            raise ValueError("X and X_smiles do not have the same length.")
+    def predict(self, X):
 
-        filtered_x_smiles = X_smiles.iloc[X.index]
-        modules = np.array([self.classify_sample(sample_smiles) for sample_smiles in X_smiles])
+        X_fingerprints = convert_to_morgan_fingerprints(X)
+
+        modules = np.array([self.classify_sample(fingerprint) for fingerprint in X_fingerprints])
 
         counter_modules = Counter(modules)
         final_predictions = np.zeros(X.shape[0])
 
         for comm, count in counter_modules.items():
             samples_in_community = np.argwhere(modules == comm).transpose()[0]
-            final_predictions[samples_in_community] = self.models[comm].predict(X.iloc[samples_in_community])
+
+            if(all(self.models[comm].final_model.get_coefficients().flatten() == 0)):
+                final_predictions[samples_in_community] = self.models[comm].final_model.get_intercepts().flatten()[0]
+            else:
+                if type(X) == pd.DataFrame:
+                    X_samples = X.iloc[samples_in_community]
+                else:
+                    X_samples = X[samples_in_community, ]
+                final_predictions[samples_in_community] = self.models[comm].predict(X_samples)
 
         return final_predictions
 
