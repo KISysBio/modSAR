@@ -10,9 +10,12 @@ RUN conda install -y -c rdkit rdkit
 RUN conda install -y -c conda-forge python-igraph
 RUN conda install -y py4j=0.10.8.1
 
+RUN conda install numpy=1.19
+
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --ignore-installed certifi
+
 
 RUN ipython3 profile create
 RUN echo 'import pandas as pd; pd.set_option("display.width", 160)' >> /home/jovyan/.ipython/profile_default/ipython_config.py

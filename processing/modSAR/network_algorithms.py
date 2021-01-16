@@ -103,7 +103,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
         if self.threshold is None:
             g, threshold = GraphUtils.find_optimal_threshold(similarity_df)
         else:
-            g = GraphUtils.create_graph(similarity_df, threshold, k,
+            g = GraphUtils.create_graph(similarity_df, self.threshold, k,
                                         is_directed=False, is_weighted=is_weighted)
 
         self.threshold = threshold
