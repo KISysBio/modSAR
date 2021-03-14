@@ -1,8 +1,33 @@
 """Feature filter selection"""
+import rdkit
 
+import numpy as np
 import pandas as pd
 
 from .utils import print_progress_bar
+
+
+def convert_to_morgan_fingerprints(X, nBits=1024):
+    """ Convert ECFP4 features matrix (a DataFrame with `nBits` columns)
+        to morgan fingerprints with RDKit library
+    """
+
+    if type(X) == pd.DataFrame:
+        X_array = X.values
+    elif type(X) == np.ndarray:
+        X_array = X
+    else:
+        raise ValueError("Unknown type (X) = %s" % type(X))
+
+    X_fingerprints = list()
+    for row in X_array:
+        bitvect = rdkit.DataStructs.cDataStructs.ExplicitBitVect(nBits, False)
+        for i, col in enumerate(row):
+            bitvect.SetBit(i)
+
+        X_fingerprints.append(bitvect)
+
+    return X_fingerprints
 
 
 def apply_feature_filter(X):
