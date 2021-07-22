@@ -1,17 +1,25 @@
+# ALGORITHMS AND MACHINE LEARNING DEPENDENCIES
 oplra_reg==0.3
-shap==0.36.0
-scipy==1.5.2
-pandas>=1.0
-ipdb==0.11
-plotnine==0.6.0
+Pyomo>=5.7.1
+shap>=0.36.0
+
+# I/O AND DEBUGGING
+ipdb>=0.11
+openpyxl>=3.0.0
+xlsxwriter==1.3.6
+chembl_webresource_client>=0.10.1
+
+# VISUALIZATION
+plotnine>=0.8.0
 vega==3.4.0 
 altair==4.1.0
-openpyxl==2.6.2
-xlsxwriter==1.3.6
-chembl_webresource_client==0.10.1
-jupyter_contrib_nbextensions==0.4.0
-jupyter_nbextensions_configurator==0.4.0
-networkx==2.5
-nx_altair==0.1.6
-Pyomo==5.7.1
+
+# NETWORKS
+networkx>=2.5
+nx_altair>=0.1.6
 pyvis
+
+
+# JUPYTER CUSTOMIZATION
+jupyter_contrib_nbextensions>=0.4
+jupyter_nbextensions_configurator>=0.4
