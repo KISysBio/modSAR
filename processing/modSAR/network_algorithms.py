@@ -23,7 +23,7 @@ class ModSAR(oplrareg.BaseOplraEstimator):
     """
 
     def __init__(self, metadata, lam=0.01, epsilon=0.01, beta=0.03,
-                 solver_name="cplex", threshold=None, k=0):
+                 solver_name="glpk", threshold=None, k=0):
         super().__init__("modSAR", "v0.1", lam, epsilon, beta, solver_name)
 
         self.metadata = metadata  # Register metadata DataFrame so the algorithm can retrieve Smiles later
