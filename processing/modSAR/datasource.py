@@ -8,7 +8,7 @@ This module supports representation of functional bioactivies
 
 """
 
-import chembl_webresource_client
+from chembl_webresource_client.new_client import new_client
 import numpy as np
 import pandas as pd
 
@@ -164,7 +164,7 @@ class ChEMBLApiDataSource(DataSource):
                                                   apply_filter=apply_filter)
 
     def _get_bioactivities_df(self):
-        activity = chembl_webresource_client.new_client.new_client.activity
+        activity = new_client.activity
         result = activity.filter(target_chembl_id=self.target_id,
                                  assay_type__iregex='(B|F)')
 
